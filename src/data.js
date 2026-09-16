@@ -2,6 +2,7 @@ import { extraPages } from "./advanced-data.js";
 import { frontierPages } from "./frontier-data.js";
 import { research } from "./research.js";
 import { applyActivityBrief } from "./activity-data.js";
+import { applyKnowledgeReview, knowledgeSources } from "./knowledge-data.js";
 export const sources = [
   {
     name: "Microsoft Adoption",
@@ -1564,6 +1565,8 @@ sources.push(
   ),
 );
 applyActivityBrief(sites);
+applyKnowledgeReview(sites);
+sources.push(...knowledgeSources);
 export const allPages = sites.flatMap((s) =>
   s.pages.map((p) => ({ ...p, siteId: s.id, siteName: s.name })),
 );

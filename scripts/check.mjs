@@ -5,6 +5,7 @@ import { visualGuides, guideAssets, guideKinds } from "../src/visual-guides-data
 import { research } from "../src/research.js";
 import { extraPages } from "../src/advanced-data.js";
 import { frontierPages } from "../src/frontier-data.js";
+import { replacementPages, newsItems, initialKnowledge, knowledgeGroups, pipelineGate, initialPipeline } from "../src/knowledge-data.js";
 import {
   calculateModel,
   auditLog,
@@ -30,6 +31,26 @@ import {
 } from "../src/models.js";
 assert.equal(sites.length, 5);
 assert.equal(allPages.length, 200);
+// 知見の関係先・ニュースの根拠・仕掛かり制限を検証する。
+const routeSet = new Set(sites.flatMap(s => s.pages.map(p => `#/${s.id}/${p.id}`)));
+for (const n of initialKnowledge) {
+  assert(knowledgeGroups.some(g => g.id === n.group));
+  assert(n.relation && n.detail && n.evidence);
+  assert(routeSet.has(n.route), `Knowledge route: ${n.id}`);
+  assert(n.related.every(id => initialKnowledge.some(other => other.id === id)), `Knowledge relation: ${n.id}`);
+}
+for (const news of newsItems) {
+  assert(new URL(news.url).protocol === "https:");
+  assert(news.date <= "2026-09-17" && news.fact && news.hypothesis && news.caution);
+  assert(routeSet.has(news.route));
+}
+assert(pipelineGate(initialPipeline, initialPipeline[0], 1, 4).includes("仕掛かり上限"));
+assert.equal(pipelineGate(initialPipeline, initialPipeline[0], 1, 5), "");
+assert(pipelineGate(initialPipeline, initialPipeline[1], 2, 5).includes("止まった理由"));
+assert(pipelineGate(initialPipeline, initialPipeline[0], 2, 5).includes("順に"));
+assert(pipelineGate(initialPipeline, initialPipeline[4], 4, 5).includes("確認済み"));
+assert.equal(pipelineGate(initialPipeline, { ...initialPipeline[4], effectVerified: true }, 4, 5), "");
+assert(pipelineGate(initialPipeline, { ...initialPipeline[0], stage: 4 }, 1, 4).includes("仕掛かり上限"));
 const guideRoutes = new Set();
 for (const guide of visualGuides) {
   const route = `${guide.site}/${guide.page}`;
@@ -48,7 +69,7 @@ const frontierTypes =
 const supported = new Set(
   "dashboard learning catalog editor stories people events booking assessment analytics checklist compare feed matrix calculator playbook form recognition report fleet board flow experiment timeline table review radar raci handoff a3 modelcalc benchmark cohort scenario quiz redaction scheduler risk evidence weighted logaudit variants valuestream rules control ledger"
     .split(" ")
-    .concat(frontierTypes, ["adoption-support", "workflow-layers", "execution-tracker", "technology-qbr", "automation-atlas"]),
+    .concat(frontierTypes, replacementPages.map(p => p[3]), ["adoption-support", "workflow-layers", "execution-tracker", "technology-qbr", "automation-atlas"]),
 );
 for (const site of sites) {
   assert.equal(site.pages.length, 40, site.name);

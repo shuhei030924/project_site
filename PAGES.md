@@ -16,15 +16,15 @@
 | 8 | [相談予約](https://shuhei030924.github.io/project_site/#/gain/office-hours) | 解決したい課題を添えて、30分の相談枠を予約。 | — |
 | 9 | [AI活用度チェック](https://shuhei030924.github.io/project_site/#/gain/maturity) | 5つの観点で、チームの次の一歩を見つける。 | — |
 | 10 | [部門別の定着状況](https://shuhei030924.github.io/project_site/#/gain/adoption) | 利用人数だけでなく、継続利用と業務成果を見る。 | — |
-| 11 | [30日実践チャレンジ](https://shuhei030924.github.io/project_site/#/gain/challenge) | 小さく使い、確かめて、仲間に届ける。 | — |
+| 11 | [未解決の問い・相談募集](https://shuhei030924.github.io/project_site/#/gain/challenge) | 質問を担当・検証・答えへつなぎ、解決した知見をマップに残す。 | — |
 | 12 | [AI定着の障壁と支援](https://shuhei030924.github.io/project_site/#/gain/tool-guide) | 何に使うか、誰に聞くか。組織の4つの壁から支援を選ぶ。 | — |
 | 13 | [入力前の確認](https://shuhei030924.github.io/project_site/#/gain/safe-use) | デモの運用ルール。実際の利用では所属組織の規程を確認。 | — |
-| 14 | [コミュニティの会話](https://shuhei030924.github.io/project_site/#/gain/community) | 現場で試したことを、気軽に持ち寄る。 | — |
+| 14 | [つながるナレッジマップ](https://shuhei030924.github.io/project_site/#/gain/community) | 5つの活動を横断して、知見・問い・判断理由のつながりをたどる。 | — |
 | 15 | [チームスキルマップ](https://shuhei030924.github.io/project_site/#/gain/skill-map) | 得意を見つけ、教え合える組み合わせを探す。 | — |
 | 16 | [時間創出シミュレーター](https://shuhei030924.github.io/project_site/#/gain/time-saved) | 繰り返す仕事を、チーム全体の余力に換算。 | — |
 | 17 | [新メンバーの最初の一週間](https://shuhei030924.github.io/project_site/#/gain/starter-kit) | AIに詳しくなくても、仕事の一場面から始められます。 | — |
 | 18 | [活用事例を投稿](https://shuhei030924.github.io/project_site/#/gain/share) | 別のチームが再現できる情報を残しましょう。 | — |
-| 19 | [今月の貢献](https://shuhei030924.github.io/project_site/#/gain/recognition) | 成果を広めた人、仲間を支えた人を称える。 | — |
+| 19 | [AIニュースと業務への影響](https://shuhei030924.github.io/project_site/#/gain/recognition) | 公式発表を、業務で試す仮説と次の行動へ。公開日・確認日・出典付き。 | — |
 | 20 | [月次インパクトレポート](https://shuhei030924.github.io/project_site/#/gain/impact) | 2026年9月｜学びがどのように仕事に届いたか。 | — |
 | 21 | [AI出力の品質レビュー](https://shuhei030924.github.io/project_site/#/gain/output-quality) | 報告書の要約を、速さと正しさの両方で評価。 | — |
 | 22 | [学習後の実践定着](https://shuhei030924.github.io/project_site/#/gain/retention) | 修了率の先にある、4週間後の実務利用を確認。 | — |
@@ -63,7 +63,7 @@
 | 10 | [保全スケジュール](https://shuhei030924.github.io/project_site/#/robot/maintenance) | 稼働計画と重ならないように、保全作業を準備。 | — |
 | 11 | [停止・復旧記録](https://shuhei030924.github.io/project_site/#/robot/incidents) | 再発防止につながる、停止理由と復旧の履歴。 | — |
 | 12 | [稼働ロス分析](https://shuhei030924.github.io/project_site/#/robot/utilization) | 停止時間を要因別に分け、改善順を決める。 | — |
-| 13 | [機体比較](https://shuhei030924.github.io/project_site/#/robot/comparison) | FOUP搬送要件に対する候補機の比較例。すべて架空の製品です。 | — |
+| 13 | [適用条件・現場知見ライブラリ](https://shuhei030924.github.io/project_site/#/robot/comparison) | 搬送・点検・着脱の知見を、適用できる条件とできない条件で探す。 | — |
 | 14 | [拠点展開ロードマップ](https://shuhei030924.github.io/project_site/#/robot/rollout) | 実証で得た条件を標準化し、次の拠点へ。 | — |
 | 15 | [復旧手順書](https://shuhei030924.github.io/project_site/#/robot/procedures) | AMRの通路障害停止｜権限のある担当者向けのデモ手順。 | 注目点を探る |
 | 16 | [工場の自動化領域マップ](https://shuhei030924.github.io/project_site/#/robot/parts) | AMR・CoBot・四足歩行・倉庫自動化・ウェーハ搬送を、現場の作業から理解する。 | 工場の領域マップ |
@@ -111,7 +111,7 @@
 | 13 | [技術探索戦略とQBR](https://shuhei030924.github.io/project_site/#/supplier/meetings) | Strategy・Solution List・Benchmark・Scoringを、四半期レビューと実証判断へつなぐ。 | — |
 | 14 | [パートナー評価](https://shuhei030924.github.io/project_site/#/supplier/scorecard) | 共創の進めやすさを、次の協業に生かす。 | — |
 | 15 | [共同ロードマップ](https://shuhei030924.github.io/project_site/#/supplier/roadmap) | 合意した成果物で進捗を確かめる。 | — |
-| 16 | [パートナーからの学び](https://shuhei030924.github.io/project_site/#/supplier/knowledge) | 他の現場の知見を、自社の検証仮説へ。 | — |
+| 16 | [技術ウォッチと検証待ち](https://shuhei030924.github.io/project_site/#/supplier/knowledge) | 外部発表から足りない証拠を見つけ、次の実証と担当を決める。 | — |
 | 17 | [実証予算配分](https://shuhei030924.github.io/project_site/#/supplier/budget) | 1件あたりの実証費から、検証可能な案件数を試算。 | — |
 | 18 | [横展開準備](https://shuhei030924.github.io/project_site/#/supplier/scale) | 実証の成功条件を、別の拠点でも再現する。 | 手順をたどる |
 | 19 | [採用判定会議](https://shuhei030924.github.io/project_site/#/supplier/decision) | 技術の新しさより、現場で再現できる成果を。 | — |
@@ -156,7 +156,7 @@
 | 13 | [判断リスク台帳](https://shuhei030924.github.io/project_site/#/workflow/risks) | AIが間違えた場合の影響と、確認方法を考える。 | — |
 | 14 | [現場観察ノート](https://shuhei030924.github.io/project_site/#/workflow/observations) | 現場で見た事実と、解釈を分けて記録。 | 注目点を探る |
 | 15 | [改善候補の優先順位](https://shuhei030924.github.io/project_site/#/workflow/opportunities) | 効果と実行しやすさを合わせて判断。 | — |
-| 16 | [変更履歴](https://shuhei030924.github.io/project_site/#/workflow/versions) | 業務が変わった理由と、合意した条件を残す。 | — |
+| 16 | [判断の理由と見直し条件](https://shuhei030924.github.io/project_site/#/workflow/versions) | 採用案・代替案・判断の背景と、見直す条件を記録する。 | — |
 | 17 | [現場レビュー](https://shuhei030924.github.io/project_site/#/workflow/validation) | 業務を実際に行う人が、マップの妥当性を確認。 | — |
 | 18 | [改善案をEGCへ](https://shuhei030924.github.io/project_site/#/workflow/export) | 分析結果を、実行する案件につなげる。 | — |
 | 19 | [業務デジタルツインの4階層](https://shuhei030924.github.io/project_site/#/workflow/templates) | ひとつの業務を全体・判断・チーム・個人へ掘り下げ、人とAIの分担を考える。 | — |
@@ -188,7 +188,7 @@
 | --- | --- | --- | --- |
 | 1 | [改善を実行までつなぐホーム](https://shuhei030924.github.io/project_site/#/egc/overview) | 現場の気づきや分析で見つけた改善案を案件化し、妥当性確認、担当組織確認、実施可否判断、実行、効果確認まで管理します。 | 画像付きガイドへの入口 |
 | 2 | [改善を提案](https://shuhei030924.github.io/project_site/#/egc/intake) | 困っていることと、変えたい状態から始めましょう。 | — |
-| 3 | [改善パイプライン](https://shuhei030924.github.io/project_site/#/egc/pipeline) | 受付から効果確認まで、止まっている案件を見つける。 | — |
+| 3 | [改善案件の滞留と次の行動](https://shuhei030924.github.io/project_site/#/egc/pipeline) | 仕掛かり数・止まった理由・担当・期限を見ながら案件を前へ進める。 | — |
 | 4 | [受付トリアージ](https://shuhei030924.github.io/project_site/#/egc/triage) | 不足情報・重複・担当範囲を整理する。 | — |
 | 5 | [優先順位マップ](https://shuhei030924.github.io/project_site/#/egc/priority) | 大きな効果と、小さく始められる改善を両立。 | — |
 | 6 | [A3改善ストーリー](https://shuhei030924.github.io/project_site/#/egc/a3) | EGC-024｜問題から検証まで、1枚で考える。 | 改善前後を比べる |
@@ -204,7 +204,7 @@
 | 16 | [改善を標準にする](https://shuhei030924.github.io/project_site/#/egc/standards) | 実行した改善を、元に戻らない仕組みに。 | — |
 | 17 | [横展開マッチング](https://shuhei030924.github.io/project_site/#/egc/replication) | 実施条件が近い拠点から、再現性を確かめる。 | 手順をたどる |
 | 18 | [案件の担当と次の行動](https://shuhei030924.github.io/project_site/#/egc/recognition) | 妥当性・担当組織・実施可否・実行・効果確認を、次の行動と一緒に追う。 | — |
-| 19 | [ふりかえり](https://shuhei030924.github.io/project_site/#/egc/retrospective) | 成功も中止も、次の改善に使える知見に。 | — |
+| 19 | [失敗から再利用する知見](https://shuhei030924.github.io/project_site/#/egc/retrospective) | 発生条件・教訓・反映先の手順・確認者を結び、次の現場に生かす。 | — |
 | 20 | [改善成果レポート](https://shuhei030924.github.io/project_site/#/egc/impact) | 2026年 第3四半期｜提案数より、実行された価値。 | — |
 | 21 | [小改善のPDCAログ](https://shuhei030924.github.io/project_site/#/egc/pdca) | 一度で正解にせず、仮説と学びを次の試行へ。 | — |
 | 22 | [改善で増えるリスク](https://shuhei030924.github.io/project_site/#/egc/improvement-fmea) | 効率化によって別の仕事にしわ寄せが出ないか。 | — |

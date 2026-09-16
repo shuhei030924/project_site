@@ -54,6 +54,8 @@ import { useSaved, pageSnapshot, hasStorageError } from "./storage";
 import { advancedComponents, advancedUsage, ResearchNote } from "./advanced";
 import { frontierComponents, frontierUsage } from "./frontier";
 import { ActivityMap, activityComponents, activityUsage } from "./activity";
+import { KnowledgeEntrances, knowledgeComponents, knowledgeUsage } from "./knowledge";
+import "./knowledge.css";
 import { VisualGuide, VisualGuideShelf, VisualGuideGallery } from "./visual-guides";
 import "./visual-guides.css";
 import "./activity.css";
@@ -401,7 +403,7 @@ function App() {
             </div>
             <span className="demo-pill">
               <span />
-              サンプルデータ
+              {page.type === "knowledge-news" ? "公式情報と活用仮説" : "サンプルデータ"}
             </span>
             <span className="avatar small-avatar">ST</span>
           </div>
@@ -467,7 +469,7 @@ function App() {
               <span className="footer-mark">F↗</span> FORWARD{" "}
               <span className="footer-sep">/</span> {site.name}
             </span>
-            <span>架空のデモデータ · 入力内容はこのブラウザにのみ保存</span>
+            <span>{page.type === "knowledge-news" ? "ニュースは公式情報を参照 · 活用案は仮説 · 入力はブラウザ内保存" : "架空のデモデータ · 入力内容はこのブラウザにのみ保存"}</span>
           </footer>
         </main>
       </div>
@@ -723,6 +725,7 @@ function Dashboard({ site, page }) {
         </section>
       </div>
       <ActivityMap site={site} />
+      <KnowledgeEntrances site={site} />
       <VisualGuideShelf site={site} />
       <div className="metrics">
         {site.metrics.map(([label, value, unit, note], i) => (
@@ -977,6 +980,7 @@ function Page({ site, page, notify }) {
     ...advancedComponents,
     ...frontierComponents,
     ...activityComponents,
+    ...knowledgeComponents,
     catalog: Catalog,
     stories: Stories,
     people: People,
@@ -1022,6 +1026,7 @@ function Page({ site, page, notify }) {
               ...advancedUsage,
               ...frontierUsage,
               ...activityUsage,
+              ...knowledgeUsage,
               catalog: "カードを開き、内容を確認して保存。",
               stories: "事例を開き、再現するときの条件を確認。",
               people: "担当者の専門を確認し、相談メモを保存。",
