@@ -249,3 +249,223 @@ export function conflicts(items) {
   );
   return { parsed, pairs };
 }
+
+// --- 第3期（frontier）で追加した純粋な計算 ---
+export const KANO = {
+  labels: ["魅力的", "一元的", "当たり前", "無関心", "逆", "要確認"],
+  keys: ["A", "O", "M", "I", "R", "Q"],
+  // 行：機能あり(好き/当然/どちらでも/我慢/嫌い)、列：機能なし
+  table: [
+    ["Q", "A", "A", "A", "O"],
+    ["R", "I", "I", "I", "M"],
+    ["R", "I", "I", "I", "M"],
+    ["R", "I", "I", "I", "M"],
+    ["R", "R", "R", "R", "Q"],
+  ],
+};
+export function kanoCategory(functional, dysfunctional) {
+  const key = KANO.table[functional]?.[dysfunctional];
+  if (!key) return null;
+  return { key, label: KANO.labels[KANO.keys.indexOf(key)] };
+}
+export function littlesLaw(wip, throughput) {
+  if (!(throughput > 0) || !(wip >= 0)) return null;
+  return wip / throughput;
+}
+// 概念理解用の簡略式。ISO 13855系の S = K×T + C を人と機体の接近速度で展開。
+export function separationDistance({ human, robot, react, stop, margin }) {
+  const v = [human, robot, react, stop, margin].map(Number);
+  if (v.some((n) => !Number.isFinite(n) || n < 0)) return null;
+  const [vh, vr, tr, ts, c] = v;
+  return {
+    humanTravel: vh * (tr + ts),
+    robotTravel: vr * (tr + ts),
+    margin: c,
+    total: vh * (tr + ts) + vr * (tr + ts) + c,
+  };
+}
+export function pathMetrics(points) {
+  let distance = 0,
+    crossings = 0;
+  const cross = (a, b, c, d) => {
+    const s = (p, q, r) => (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]);
+    const d1 = s(c, d, a),
+      d2 = s(c, d, b),
+      d3 = s(a, b, c),
+      d4 = s(a, b, d);
+    return d1 * d2 < 0 && d3 * d4 < 0;
+  };
+  for (let i = 1; i < points.length; i++) {
+    const [x1, y1] = points[i - 1],
+      [x2, y2] = points[i];
+    distance += Math.hypot(x2 - x1, y2 - y1);
+    for (let j = 1; j < i - 1; j++)
+      if (cross(points[j - 1], points[j], points[i - 1], points[i])) crossings++;
+  }
+  return { distance, crossings };
+}
+export function busFactor(matrix) {
+  const counts = matrix.map((row) => row.filter(Boolean).length);
+  return { counts, factor: counts.length ? Math.min(...counts) : 0 };
+}
+export function hhi(shares) {
+  const total = shares.reduce((a, b) => a + Number(b || 0), 0);
+  if (!(total > 0)) return null;
+  return shares.reduce((s, n) => s + ((Number(n || 0) / total) * 100) ** 2, 0);
+}
+export function percentile(values, p) {
+  const v = values.map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+  if (!v.length) return null;
+  const pos = (v.length - 1) * p,
+    lo = Math.floor(pos),
+    hi = Math.ceil(pos);
+  return v[lo] + (v[hi] - v[lo]) * (pos - lo);
+}
+export function tokens(text) {
+  // 日本語は分かち書きしないため、助詞・句読点を除いた二文字連鎖（bigram）を語の代わりに使う
+  const chunks = String(text)
+    .toLowerCase()
+    .replace(/[のをにへではがともやからへ、。,.・「」（）()\s]+/g, " ")
+    .split(" ")
+    .filter(Boolean);
+  const set = new Set();
+  chunks.forEach((c) => {
+    if (c.length === 1) set.add(c);
+    for (let i = 0; i < c.length - 1; i++) set.add(c.slice(i, i + 2));
+  });
+  return set;
+}
+export function jaccard(a, b) {
+  const A = tokens(a),
+    B = tokens(b);
+  const inter = [...A].filter((x) => B.has(x)).length;
+  const union = new Set([...A, ...B]).size;
+  return union ? inter / union : 0;
+}
+export function sequenceDiff(standard, actual) {
+  const n = standard.length,
+    m = actual.length,
+    dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--)
+    for (let j = m - 1; j >= 0; j--)
+      dp[i][j] =
+        standard[i] === actual[j]
+          ? dp[i + 1][j + 1] + 1
+          : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const ops = [];
+  let i = 0,
+    j = 0;
+  while (i < n || j < m) {
+    if (i < n && j < m && standard[i] === actual[j]) {
+      ops.push({ type: "match", step: standard[i] });
+      i++;
+      j++;
+    } else if (j < m && (i === n || dp[i][j + 1] >= dp[i + 1][j])) {
+      ops.push({ type: "extra", step: actual[j] });
+      j++;
+    } else {
+      ops.push({ type: "skipped", step: standard[i] });
+      i++;
+    }
+  }
+  return {
+    ops,
+    skipped: ops.filter((o) => o.type === "skipped").length,
+    extra: ops.filter((o) => o.type === "extra").length,
+  };
+}
+export function sampleSize(baselinePct, deltaPts) {
+  const p1 = baselinePct / 100,
+    p2 = p1 + deltaPts / 100;
+  if (!(p1 > 0 && p1 < 1 && p2 > 0 && p2 < 1) || deltaPts === 0) return null;
+  const pBar = (p1 + p2) / 2,
+    z = 1.96 + 0.84;
+  return Math.ceil((2 * z ** 2 * pBar * (1 - pBar)) / (p2 - p1) ** 2);
+}
+export function heijunka(demands, capacity) {
+  const d = demands.map(Number);
+  if (!d.length || d.some((n) => !Number.isFinite(n) || n < 0)) return null;
+  const total = d.reduce((a, b) => a + b, 0),
+    level = total / d.length;
+  // 平準生産で需要を満たすために期首に必要な在庫 = 累積不足の最大値
+  let running = 0,
+    minStock = 0;
+  d.forEach((n) => {
+    running += level - n;
+    minStock = Math.min(minStock, running);
+  });
+  return {
+    level,
+    peak: Math.max(...d),
+    buffer: Math.ceil(-minStock),
+    overCapacityDays: d.filter((n) => n > capacity).length,
+    levelFits: level <= capacity,
+  };
+}
+export function kingman(utilization, ca, cs, serviceTime) {
+  const rho = Number(utilization) / 100;
+  if (!(rho >= 0 && rho < 1) || !(serviceTime > 0)) return null;
+  return (rho / (1 - rho)) * ((ca ** 2 + cs ** 2) / 2) * serviceTime;
+}
+export function oee({ planned, downtime, idealCycle, count, defects }) {
+  const v = [planned, downtime, idealCycle, count, defects].map(Number);
+  if (v.some((n) => !Number.isFinite(n) || n < 0)) return null;
+  const [p, d, c, n, x] = v;
+  if (!(p > 0) || d > p || x > n) return null;
+  const run = p - d;
+  const availability = run / p,
+    performance = run > 0 ? Math.min(1, (c * n) / 60 / run) : 0,
+    quality = n > 0 ? (n - x) / n : 0;
+  return {
+    availability,
+    performance,
+    quality,
+    oee: availability * performance * quality,
+    run,
+  };
+}
+export function brier(items) {
+  // items: [{confidence: 0-100, correct: bool}]
+  if (!items.length) return null;
+  return (
+    items.reduce(
+      (s, it) => s + (it.confidence / 100 - (it.correct ? 1 : 0)) ** 2,
+      0,
+    ) / items.length
+  );
+}
+export function wordDiff(a, b) {
+  const A = String(a).split(/(\s+|[、。])/).filter((w) => w.trim()),
+    B = String(b).split(/(\s+|[、。])/).filter((w) => w.trim());
+  const { ops } = sequenceDiff(A, B);
+  return {
+    ops,
+    changed: ops.filter((o) => o.type !== "match").length,
+    ratio: A.length + B.length ? ops.filter((o) => o.type !== "match").length / Math.max(A.length, B.length) : 0,
+  };
+}
+export function envelopeAllows(envelope, weight, offset) {
+  // envelope: [[weight, maxOffset], ...] 昇順。線形補間で許容偏心を求める。
+  const pts = envelope.map(([w, o]) => [Number(w), Number(o)]);
+  if (weight < pts[0][0] || weight > pts[pts.length - 1][0]) return { allowed: false, limit: 0 };
+  for (let i = 1; i < pts.length; i++) {
+    const [w0, o0] = pts[i - 1],
+      [w1, o1] = pts[i];
+    if (weight <= w1) {
+      const limit = w1 === w0 ? o1 : o0 + ((o1 - o0) * (weight - w0)) / (w1 - w0);
+      return { allowed: offset <= limit, limit };
+    }
+  }
+  return { allowed: false, limit: 0 };
+}
+export function canaryVerdict({ canaryErr, controlErr, tolerance, exposure, budget }) {
+  const v = [canaryErr, controlErr, tolerance, exposure, budget].map(Number);
+  if (v.some((n) => !Number.isFinite(n) || n < 0)) return null;
+  const [ce, co, tol, ex, bud] = v;
+  const blended = (ce * ex + co * (100 - ex)) / 100;
+  const verdict = ce - co > tol ? "rollback" : ce > co ? "hold" : "proceed";
+  return { blended, budgetUse: bud > 0 ? (blended / bud) * 100 : null, verdict };
+}
+export function costOfDelay(valuePerWeek, weeks) {
+  return weeks > 0 ? valuePerWeek / weeks : null;
+}

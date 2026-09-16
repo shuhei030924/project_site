@@ -450,7 +450,7 @@ function Redaction({ page, storageKey }) {
         )}
         <Note warning>{page.note}</Note>
         <p>
-          置換後にも固有の設備仕様・製品条件・取引情報が残っていないか、人が確認してください。実データの貼り付けは不要です。
+          置換後にも固有の装置仕様・プロセス条件・取引情報が残っていないか、人が確認してください。実データの貼り付けは不要です。
         </p>
       </Panel>
     </div>
@@ -996,12 +996,12 @@ function ValueStream({ page, storageKey }) {
 function Rules({ page, storageKey }) {
   const [v, setV] = useSaved(storageKey + ":rules", {
     amount: 120,
-    match: "一致",
+    match: "揃っている",
     single: "いいえ",
   });
   const valid = v.amount !== "" && Number.isFinite(+v.amount) && +v.amount >= 0;
   const path =
-    v.match === "不一致"
+    v.match === "不足"
       ? 0
       : v.single === "はい"
         ? 1
@@ -1009,16 +1009,16 @@ function Rules({ page, storageKey }) {
           ? 2
           : 3;
   const rules = [
-    "仕様不一致 → 依頼者へ差戻し",
-    "単一供給 → 例外承認の経路",
-    "100万円以上 → 部門長の承認",
-    "100万円未満 → 担当承認",
+    "測定データ不足 → 再測定を依頼",
+    "前ロットも規格外れ → 装置停止判断の例外経路",
+    "影響100枚以上 → 部門長の承認",
+    "影響100枚未満 → プロセス技術者の承認",
   ];
   return (
     <div className="two-column">
-      <Panel title="試す見積条件">
+      <Panel title="試すホールドロットの条件">
         <label className="field">
-          見積金額（万円）
+          影響を受けるウェーハ枚数（枚）
           <input
             type="number"
             min="0"
@@ -1027,17 +1027,17 @@ function Rules({ page, storageKey }) {
           />
         </label>
         <label className="field">
-          要求仕様との一致
+          測定データの状態
           <select
             value={v.match}
             onChange={(e) => setV({ ...v, match: e.target.value })}
           >
-            <option>一致</option>
-            <option>不一致</option>
+            <option>揃っている</option>
+            <option>不足</option>
           </select>
         </label>
         <label className="field">
-          供給可能な会社が1社のみ
+          前ロットも同じ方向に規格外れ
           <select
             value={v.single}
             onChange={(e) => setV({ ...v, single: e.target.value })}
@@ -1058,7 +1058,7 @@ function Rules({ page, storageKey }) {
           ))}
         </div>
         <Note warning={!valid}>
-          {valid ? page.note : "見積金額を0以上で入力してください。"}
+          {valid ? page.note : "枚数を0以上で入力してください。"}
         </Note>
       </Panel>
     </div>
@@ -1253,7 +1253,7 @@ function Ledger({ page, storageKey }) {
         確認した重複範囲・採用理由
         <SavedNote
           storageKey={storageKey + ":rationale"}
-          initial="見積比較の2件は同じ転記時間を含む可能性。測定対象を確認するまで合算しない。"
+          initial="ホールドロット処置の2件は同じ転記時間を含む可能性。測定対象を確認するまで合算しない。"
         />
       </label>
     </Panel>
@@ -1291,7 +1291,7 @@ export const advancedUsage = {
   logaudit: "ログを修正して、欠落・重複・時刻の警告を解消。",
   variants: "件数と所要時間を変え、経路別の影響を比較。",
   valuestream: "作業と待ちを編集して、時間の内訳を確認。",
-  rules: "見積条件を変え、適用される判断ルールを確認。",
+  rules: "ホールドロットの条件を変え、適用される判断ルールを確認。",
   control: "測定値を変え、基準から外れる点を確認。",
   ledger: "重複候補を確認し、合算する効果を1行ずつ選択。",
 };

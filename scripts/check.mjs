@@ -2,19 +2,53 @@ import { sites, allPages } from "../src/data.js";
 import assert from "node:assert/strict";
 import { research } from "../src/research.js";
 import { extraPages } from "../src/advanced-data.js";
-import { calculateModel, auditLog, conflicts } from "../src/models.js";
+import { frontierPages } from "../src/frontier-data.js";
+import {
+  calculateModel,
+  auditLog,
+  conflicts,
+  kanoCategory,
+  littlesLaw,
+  separationDistance,
+  pathMetrics,
+  busFactor,
+  hhi,
+  percentile,
+  jaccard,
+  sequenceDiff,
+  sampleSize,
+  heijunka,
+  kingman,
+  oee,
+  brier,
+  wordDiff,
+  envelopeAllows,
+  canaryVerdict,
+  costOfDelay,
+} from "../src/models.js";
 assert.equal(sites.length, 5);
-assert.equal(allPages.length, 150);
-const supported = new Set(
-  "dashboard learning catalog editor stories people events booking assessment analytics checklist compare feed matrix calculator playbook form recognition report fleet board flow experiment timeline table review radar raci handoff a3 modelcalc benchmark cohort scenario quiz redaction scheduler risk evidence weighted logaudit variants valuestream rules control ledger".split(
+assert.equal(allPages.length, 200);
+const frontierTypes =
+  "chain journey ladder tree spaced pairing claims editdiff pathbuilder calibration andon zone canary hierarchy replay waterfall queue heatmap envelope yamazumi premortem quadrant triangulate concentration split bipartite brieflint samplesize pricing milestonepay sipoc spaghetti heijunka busfactor daylog fieldaudit approvals conformance blueprint terms kano flowlaw pokayoke catchball cd3 changeload dedupe alignment issuetree sla".split(
     " ",
-  ),
+  );
+const supported = new Set(
+  "dashboard learning catalog editor stories people events booking assessment analytics checklist compare feed matrix calculator playbook form recognition report fleet board flow experiment timeline table review radar raci handoff a3 modelcalc benchmark cohort scenario quiz redaction scheduler risk evidence weighted logaudit variants valuestream rules control ledger"
+    .split(" ")
+    .concat(frontierTypes, ["adoption-support", "workflow-layers", "execution-tracker", "technology-qbr", "automation-atlas"]),
 );
 for (const site of sites) {
-  assert.equal(site.pages.length, 30, site.name);
-  assert.equal(new Set(site.pages.map((p) => p.id)).size, 30);
-  assert.equal(new Set(site.pages.map((p) => p.title)).size, 30);
+  assert.equal(site.pages.length, 40, site.name);
+  assert.equal(new Set(site.pages.map((p) => p.id)).size, 40);
+  assert.equal(new Set(site.pages.map((p) => p.title)).size, 40);
   assert.equal(extraPages[site.id].length, 10);
+  assert.equal(frontierPages[site.id].length, 10);
+  // 第3期はサイト内で部品を使い回さない（同じようなページの禁止）
+  assert.equal(
+    new Set(frontierPages[site.id].map((p) => p.type)).size,
+    10,
+    `${site.id}: frontier types must be distinct`,
+  );
   assert(
     site.pages.some((p) => ["analytics", "radar"].includes(p.type)),
     `${site.id}: dashboard analysis target`,
@@ -67,10 +101,40 @@ for (const site of sites) {
       assert.equal(p.values.length, p.y.length);
       for (const row of p.values) assert.equal(row.length, p.x.length);
     }
+    if (p.type === "calibration")
+      p.questions.forEach(([, options, ans]) =>
+        assert(ans >= 0 && ans < options.length),
+      );
+    if (p.type === "tree") {
+      for (const [, yes, no] of Object.values(p.nodes))
+        for (const id of [yes, no])
+          assert(p.nodes[id] || p.leaves[id], `${site.id}/${p.id}: tree ${id}`);
+    }
+    if (p.type === "replay")
+      assert(p.marks.every((m) => m >= 0 && m < p.events.length));
+    if (p.type === "spaghetti")
+      assert(p.sequence.every((i) => i >= 0 && i < p.stations.length));
+    if (p.type === "bipartite")
+      assert(
+        p.edges.every(
+          ([a, b]) => a < p.partners.length && b < p.techs.length,
+        ),
+      );
+    if (p.type === "blueprint") {
+      assert.equal(p.cells.length, p.steps.length);
+      p.cells.forEach((c) => assert.equal(c.length, p.layers.length));
+    }
+    if (p.type === "kano")
+      p.requests.forEach((r) => assert(kanoCategory(+r[1], +r[2])));
   }
 }
+// 第3期の部品は5サイトを通しても重複しない
+assert.equal(
+  new Set(Object.values(frontierPages).flat().map((p) => p.type)).size,
+  50,
+);
 console.log(
-  "Validated: 5 workspaces, 150 distinct routes, 50 research-backed additions, all schema and next-page links.",
+  "Validated: 5 workspaces, 200 distinct routes, 100 research-backed additions (50 distinct frontier widgets), all schema and next-page links.",
 );
 const cases = [
   ["support", [6, 4, 30, 60], "48"],
@@ -128,6 +192,56 @@ assert.equal(
   1,
 );
 assert.equal(conflicts([["A", "25:00", 30]]).parsed[0].valid, false);
+// 第3期の計算
+assert.equal(kanoCategory(0, 4).key, "O");
+assert.equal(kanoCategory(1, 4).key, "M");
+assert.equal(kanoCategory(0, 2).key, "A");
+assert.equal(kanoCategory(2, 2).key, "I");
+assert.equal(kanoCategory(4, 0).key, "R");
+assert.equal(kanoCategory(0, 0).key, "Q");
+assert.equal(littlesLaw(41, 5), 8.2);
+assert.equal(littlesLaw(41, 0), null);
+assert.equal(
+  Math.round(separationDistance({ human: 1600, robot: 250, react: 0.2, stop: 0.4, margin: 200 }).total),
+  1310,
+);
+assert.equal(separationDistance({ human: -1, robot: 0, react: 0, stop: 0, margin: 0 }), null);
+const cross = pathMetrics([[0, 0], [2, 2], [2, 0], [0, 2]]);
+assert.equal(cross.crossings, 1);
+assert.equal(pathMetrics([[0, 0], [3, 4]]).distance, 5);
+assert.deepEqual(busFactor([[1, 0], [1, 1]]), { counts: [1, 2], factor: 1 });
+assert.equal(hhi([100]), 10000);
+assert.equal(hhi([50, 50]), 5000);
+assert.equal(hhi([0, 0]), null);
+assert.equal(percentile([1, 2, 3, 4, 5], 0.5), 3);
+assert.equal(percentile([], 0.9), null);
+assert(jaccard("見積比較表の転記を自動化したい", "見積の数値を比較表へ自動で転記する仕組み") >= 0.2);
+assert(jaccard("見積比較表の転記を自動化したい", "点検記録の検索を早くしたい") < 0.2);
+const diff = sequenceDiff(["a", "b", "c", "d"], ["a", "c", "b", "x", "d"]);
+assert.equal(diff.skipped + diff.extra, 3);
+assert.equal(sequenceDiff(["a"], ["a"]).skipped, 0);
+assert.equal(sampleSize(92, 3), 1059);
+assert.equal(sampleSize(92, 0), null);
+assert.equal(sampleSize(99, 3), null);
+const lev = heijunka([20, 10, 5, 10, 5], 12);
+assert.equal(lev.level, 10);
+assert.equal(lev.buffer, 10);
+assert.equal(lev.overCapacityDays, 1);
+assert(kingman(80, 1, 1, 9) > kingman(50, 1, 1, 9));
+assert.equal(kingman(100, 1, 1, 9), null);
+const e = oee({ planned: 480, downtime: 62, idealCycle: 18, count: 1180, defects: 24 });
+assert(e.oee > 0 && e.oee < 1);
+assert.equal(oee({ planned: 480, downtime: 500, idealCycle: 18, count: 10, defects: 0 }), null);
+assert.equal(brier([{ confidence: 100, correct: true }]), 0);
+assert.equal(brier([{ confidence: 100, correct: false }]), 1);
+assert.equal(wordDiff("a b c", "a b c").changed, 0);
+assert.equal(envelopeAllows([[0, 300], [10, 300], [20, 100]], 15, 150).allowed, true);
+assert.equal(envelopeAllows([[0, 300], [10, 300], [20, 100]], 15, 250).allowed, false);
+assert.equal(envelopeAllows([[0, 300], [20, 100]], 25, 0).allowed, false);
+assert.equal(canaryVerdict({ canaryErr: 2.1, controlErr: 1.2, tolerance: 0.5, exposure: 8, budget: 3 }).verdict, "rollback");
+assert.equal(canaryVerdict({ canaryErr: 1.0, controlErr: 1.2, tolerance: 0.5, exposure: 8, budget: 3 }).verdict, "proceed");
+assert.equal(costOfDelay(8, 2), 4);
+assert.equal(costOfDelay(8, 0), null);
 console.log(
-  "Verified 10 formula examples, denominator/percent/integer guards, log defects, and schedule boundaries.",
+  "Verified 10 formula examples, denominator/percent/integer guards, log defects, schedule boundaries, and 20 frontier calculations.",
 );

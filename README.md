@@ -1,8 +1,20 @@
 # FORWARD — Transformation Workspace
 
-GAIN、Robot、Supplier Engagement、Workflow Mapper、EGC の5サイト、**各30ページ・合計150ページ**を収録した、日本語の操作可能なプロトタイプです。初版の各20ページを改善し、追加調査から各10ページを拡張しました。
+GAIN、Robot、Supplier Engagement、Workflow Mapper、EGC の5サイト、**各40ページ・合計200ページ**を収録した、日本語の操作可能なプロトタイプです。初版の各20ページを改善し、第2期で根拠・例外・実現条件を深掘りする各10ページを、第3期でリーン・品質工学・安全・ソフトウェア運用の定石を当てはめた各10ページを拡張しました。
 
 **公開サイト:** https://shuhei030924.github.io/project_site/
+
+## 2026年9月17日の活動説明を反映
+
+[ユーザー提供の説明全文](docs/activity-brief-2026-09-17.md) を最新の基準資料として保存しました。5つのホームに活動の関係と成果物を明示し、以下の5ページを活動目的に合わせて差し替えています。既存のURLを維持し、合計200ページです。
+
+- GAIN：[AI定着の障壁と支援](https://shuhei030924.github.io/project_site/#/gain/tool-guide)
+- Workflow Mapper：[業務デジタルツインの4階層](https://shuhei030924.github.io/project_site/#/workflow/templates)
+- EGC：[案件の担当と次の行動](https://shuhei030924.github.io/project_site/#/egc/recognition)
+- Supplier Engagement：[技術探索戦略とQBR](https://shuhei030924.github.io/project_site/#/supplier/meetings)
+- Robot Project：[工場の自動化領域マップ](https://shuhei030924.github.io/project_site/#/robot/parts)
+
+ロボットの適用領域は、生成した工場の概念イラストと選択できる5つの番号で説明しています。活動の関係・業務の4階層・人とAIの役割・探索からQBRまでの流れも図解しました。[見直し理由・画像の生成プロンプト](docs/content-review-2026-09-17.md) を保存しています。新しい説明と画面は `src/activity-data.js` / `src/activity.jsx` / `src/activity.css` にまとめています。
 
 ## ワークスペース
 
@@ -14,7 +26,7 @@ GAIN、Robot、Supplier Engagement、Workflow Mapper、EGC の5サイト、**各
 | Workflow Mapper | 業務・判断点・暗黙知を可視化し、改善候補を見つける | [分析ホーム](https://shuhei030924.github.io/project_site/#/workflow/overview) |
 | EGC | 提案から実行、効果確認、標準化まで管理する | [改善ホーム](https://shuhei030924.github.io/project_site/#/egc/overview) |
 
-左上のサイト切り替え、左下の全150ページ一覧、上部の横断検索で移動できます。ホームの「次の判断を、もう一段深く」から追加10ページへ移動できます。各ページには、利用シーンに合わせた具体的な入力例と「このページで試す」を表示しています。
+左上のサイト切り替え、左下の全200ページ一覧、上部の横断検索で移動できます。ホームの「現場の型と数理を、手を動かして学ぶ」から第3期の10ページへ、「次の判断を、もう一段深く」から第2期の10ページへ移動できます。各ページには、利用シーンに合わせた具体的な入力例と「このページで試す」を表示しています。
 
 ## 試せる操作
 
@@ -27,16 +39,17 @@ GAIN、Robot、Supplier Engagement、Workflow Mapper、EGC の5サイト、**各
 - 証拠と未解決事項の確認を前提にしたゲートレビュー。
 - **Workflow Mapper「改善案をEGCへ」から、編集内容をEGCの提案フォームへ引き継ぎ。**
 - A3改善ストーリーの編集、マイルストーン完了、レポートのダウンロード。
+- **第3期：**アンドンの呼び出しと応答のはしご、離隔距離の概念図、段階展開の進退判断、ヤマヅミ表での作業移動、スパゲッティチャートの順番・配置変更、SIPOCの欄編集と抜け点検、バス係数の訓練予定、狩野モデルの二問分類、リトルの法則での滞留試算、プレモーテムの予兆カレンダー、Kirkpatrickの根拠連鎖、自信と正答の較正、判定木、文単位の事実確認、語差分など。
 
 ## デモの境界
 
-すべての人物、企業、製品、数値は**架空のデモデータ**です。提供画像の文章は要件理解の参考に使用し、画像や社内URLをリポジトリへ追加していません。
+デモの舞台は架空の**半導体メーカー**（広島：前工程ファブ、仙台：後工程・テスト、東京：本社・技術センター）です。ホールドロットの処置、ウェーハ外観検査、FOUP搬送、サブファブ巡回、装置PM、レシピ変更申請など、半導体製造の業務を例にしています。すべての人物、企業、製品、数値は**架空のデモデータ**です。提供画像の文章は要件理解の参考に使用し、画像や社内URLをリポジトリへ追加していません。
 
 このサイトはバックエンド・認証・実AIへの接続を持ちません。機体制御、社外送信、正式承認、実際の予約は行いません。編集内容は `localStorage` でブラウザ単位に保存され、他ユーザーや端末とは共有されません。プライベートブラウズやストレージ制限下では保存が継続しない場合があります。実データ・秘密情報は入力しないでください。
 
-上部の「保存済み記録を書き出す」は当該ページの**初期サンプルデータと保存済みの編集状態**をJSONで出力します。フォームの未保存入力は含みません。試算、レポート、表、プロンプト等のページ内の保存ボタンは、それぞれ表示している内容を出力します。
+上部の「保存済み記録を書き出す」は当該ページの**初期サンプルデータと保存済みの編集状態**をJSONで出力します（BOMなし）。フォームの未保存入力は含みません。試算、レポート、表、プロンプト等のページ内の保存ボタンは、それぞれ表示している内容を出力します（CSV・テキストはExcelで開けるようBOM付き）。
 
-追加50ページでは、品質評価、選択式の演習、ログ不備検査、充電競合、加重平均、条件付きルール、効果の二重計上防止などを操作できます。[追加調査と修正内容](RESEARCH.md) に出典・設計判断・計算の限界をまとめています。
+第2期の50ページでは、品質評価、選択式の演習、ログ不備検査、充電競合、加重平均、条件付きルール、効果の二重計上防止などを操作できます。第3期の50ページはすべて別々の操作部品でできており、同じ部品の見出し違いはありません。[追加調査と修正内容](RESEARCH.md) に出典・設計判断・計算の限界をまとめています。
 
 ## 設計の参考
 
@@ -49,6 +62,11 @@ GAIN、Robot、Supplier Engagement、Workflow Mapper、EGC の5サイト、**各
 | [Lean Enterprise Institute — Value Stream Mapping](https://www.lean.org/lexicon-terms/value-stream-mapping/) | 現状と将来像、作業と待ち時間を区別する | Workflow Mapperのネットワーク、ボトルネック、To-Be設計 |
 | [Universal Robots — ROI & Payback](https://www.universal-robots.com/blog/calculating-roi-and-payback-period-for-your-robotic-investment/) | 投資回収を稼働・運用条件と一緒に考える | Robotの回収試算、実証、稼働ロス分析 |
 | [HYPE — Innovation Management](https://www.hypeinnovation.com/platform/innovation-management) | アイデア・技術・担当・評価ゲート・成果をつなげる | Supplier Engagementの探索〜実証、EGCの提案〜効果確認 |
+| [ASQ — SIPOC / Kano / Mistake Proofing](https://asq.org/quality-resources/sipoc) | 境界定義、要求の性質、間違いを起こせない仕組み | Workflow MapperのSIPOC、EGCの狩野分類・再発防止 |
+| [OSHA Technical Manual — Robot System Safety](https://www.osha.gov/otm/section-4-safety-hazards/chapter-4) | 速度・離隔監視と管理手段の階層 | Robotの離隔距離、管理手段、可搬範囲 |
+| [Google SRE Workbook — Canarying Releases](https://sre.google/workbook/canarying-releases/) | 一部への適用と比較群による進退判断 | Robotの設定変更の段階展開 |
+| [HBR — Premortem / Kraljic](https://hbr.org/2007/09/performing-a-project-premortem) | 失敗を先に想定する、供給リスクと事業影響で分ける | Supplier Engagementのプレモーテム、調達ポートフォリオ |
+| [Kirkpatrick Partners / NN∕g Journey Mapping](https://www.kirkpatrickpartners.com/the-kirkpatrick-model/) | 学習効果の4段階、行為・考え・感情の地図 | GAINの根拠トレース、一日のジャーニー |
 
 参考資料から採用した設計判断はアプリ内「設計の参考」でも確認できます。
 
@@ -64,9 +82,9 @@ npm run build
 ```
 
 - React + Vite。各ページの内容は `src/data.js`、画面と操作は `src/main.jsx`、見た目は `src/style.css`。
-- 追加内容は `src/advanced-data.js`、追加の操作画面は `src/advanced.jsx`、計算・検査処理は `src/models.js`、出典は `src/research.js` に分離しています。
-- ハッシュルーティングを採用し、GitHub Pages上で150ページの直リンク・再読み込みが可能です。
-- `npm run check` はページ数、ID・タイトル、リンク、各種データに加え、10種類の計算例と不正値、ログ検査、充電時間の境界条件を検証します。
+- 第2期の内容は `src/advanced-data.js`と `src/advanced.jsx`。第3期の内容は `src/frontier-data.js`、操作画面はサイト別の `src/frontier-{gain,robot,supplier,workflow,egc}.jsx`（`src/frontier.jsx` で集約）、スタイルは `src/frontier.css`。計算・検査処理は `src/models.js`、出典は `src/research.js` に分離しています。
+- ハッシュルーティングを採用し、GitHub Pages上で200ページの直リンク・再読み込みが可能です。
+- `npm run check` はページ数、ID・タイトル、リンク、各種データに加え、10種類の計算例と不正値、ログ検査、充電時間の境界条件、第3期の20種の計算（狩野分類表、リトルの法則、離隔距離、経路の交差、HHI、パーセンタイル、必要件数、平準化の緩衝、OEE、Brier、可搬範囲、段階展開の判定など）を検証します。第3期の50ページがすべて別の部品であることも検査します。
 - `main` へのpushで `.github/workflows/pages.yml` が検証・ビルド・GitHub Pages公開を行います。
 - Google Fontsを利用しています。読み込めない場合はシステムフォントへフォールバックします。
 

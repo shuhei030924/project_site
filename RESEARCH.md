@@ -1,4 +1,56 @@
-# 追加50ページの調査と設計判断
+# 追加調査と設計判断
+
+## 第3期（各10ページ・計50ページ）— 現場の型と数理
+
+2026年9月16日。前回までの150ページが「業務を記録・評価・比較する」画面に寄っていたため、第3期ではリーン生産・品質工学・安全工学・ソフトウェア運用で長く使われている**手法そのもの**を一次資料から読み、この5つの取り組みに当てはめました。50ページはすべて別々の操作部品で、同じ部品の見出し違いはありません（`npm run check` で部品の重複を禁止）。
+
+### 参照した資料と採用した視点
+
+| 参照資料 | 読み取った視点 | 独自に設計した機能 |
+| --- | --- | --- |
+| [Kirkpatrick Partners — The Kirkpatrick Model](https://www.kirkpatrickpartners.com/the-kirkpatrick-model/) | 反応→学習→行動→成果の4段階は「つながり」として確かめる | GAIN：根拠が切れた段階以降を「主張のみ」と表示する4段階トレース |
+| [NN/g — Journey Mapping 101](https://www.nngroup.com/articles/journey-mapping-101/) | 行為・考え・感情を段階ごとに並べ、感情の谷から機会を見つける | GAIN：感情スライダーで曲線が動く一日のジャーニー |
+| [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework)（継続） | 出力を評価・検証し、判断責任を明確にする | GAIN：観察・解釈・結論のはしご、判定木、文単位の事実確認、語差分、自信の較正（Brier） |
+| [Microsoft Learn — Champions](https://learn.microsoft.com/en-us/power-platform/guidance/adoption/champions)（継続） | 現場の推進役と継続的な学び | GAIN：間隔反復の再現予定、教え合いの組み合わせ、役割別パス |
+| [LEI — Andon](https://www.lean.org/lexicon-terms/andon/) | 異常を知らせ、決めた位置で止め、応答者を呼ぶ | Robot：呼び出し・経過時間・応答のはしご |
+| [OSHA OTM — Industrial Robot System Safety](https://www.osha.gov/otm/section-4-safety-hazards/chapter-4) | 速度・離隔監視、管理手段の階層、危険源の分類 | Robot：離隔距離の概念図、危険源×管理手段のピラミッド、可搬範囲の判定 |
+| [Google SRE Workbook — Canarying Releases](https://sre.google/workbook/canarying-releases/) | 一部にだけ適用し比較群と見比べ、予算内で進退を決める | Robot：走行設定の段階展開（8→25→50→100%） |
+| [LEI — Standardized Work](https://www.lean.org/lexicon-terms/standardized-work/)（継続） | タクト・作業順序・稼働の損失 | Robot：OEEの滝グラフ、稼働率と待ち時間の曲線（Kingman近似）、ヤマヅミ表 |
+| [ASQ — FMEA](https://asq.org/quality-resources/fmea)（継続） | 検知・判断・復旧を分けて対策する | Robot：復旧タイムラインの再生、停止の場所ヒートマップ |
+| [HBR — Performing a Project Premortem](https://hbr.org/2007/09/performing-a-project-premortem) | 「すでに失敗した」として理由を集める | Supplier：失敗の見出し、理由と予兆、12週の確認カレンダー |
+| [HBR — Purchasing Must Become Supply Management](https://hbr.org/1983/09/purchasing-must-become-supply-management) | 供給リスク×事業影響の4象限 | Supplier：技術領域の調達ポートフォリオ、依存集中（HHI） |
+| [NASA — TRL](https://www.nasa.gov/aeronautics/technology-readiness-levels-demystified/)（継続） | 主張ではなく環境と根拠で確かめる | Supplier：三者の説明の照合、実証に必要な件数 |
+| [Innovate UK — Innovation Exchange](https://iuk-business-connect.org.uk/programme/innovation-exchange/)（継続） | 課題文の質と協業条件 | Supplier：課題文の点検、費用と成果の分担、技術と企業のつながり図、マイルストーン連動支払い |
+| [ASQ — SIPOC+CM](https://asq.org/quality-resources/sipoc) | 供給者・入力・工程・出力・顧客＋制約・測定 | Workflow：7欄のボードと抜けの点検 |
+| [LEI — Spaghetti Chart](https://www.lean.org/lexicon-terms/spaghetti-chart/) | 移動経路の距離と交差 | Workflow：格子上の経路図、順番と配置の変更 |
+| [LEI — Heijunka](https://www.lean.org/lexicon-terms/heijunka/) | 量と種類の平準化と必要な緩衝 | Workflow：曜日の依頼件数の平準化 |
+| [Bus factor](https://en.wikipedia.org/wiki/Bus_factor) | 何人抜けると止まるか | Workflow：作業×担当者の係数と訓練予定 |
+| [Celonis — Event Logs](https://docs.celonis.com/en/event-logs--file-upload-)（継続） | 記録と標準の照合 | Workflow：標準手順との適合検査（LCSによる飛ばし・追加の検出）、帳票項目の利用状況 |
+| [ASQ — Kano Model](https://asq.org/quality-resources/kano-model) | 当たり前・一元的・魅力的の分類 | EGC：二問からの分類と分布 |
+| [Little's Law](https://en.wikipedia.org/wiki/Little%27s_law) | L ＝ λW | EGC：仕掛かり・処理速度・受付から滞留とリードタイムを試算 |
+| [ASQ — Mistake Proofing](https://asq.org/quality-resources/mistake-proofing) | 排除・置換・容易化・検出と検査の位置 | EGC：間違いごとの対策選択 |
+| [LEI — Hoshin Kanri](https://www.lean.org/lexicon-terms/hoshin-kanri/) | 方針の受け渡しと懸念の戻し | EGC：キャッチボール、関係者の合意状況 |
+| [LEI — Leader Standard Work](https://www.lean.org/lexicon-terms/leader-standard-work/)（継続） | 現場の負荷と返答の遅れを見る | EGC：変更負荷、問題の分解ツリー、返答時間の90パーセンタイル |
+
+### 解釈と限界（第3期）
+
+- 離隔距離は S ＝（人の速度＋機体の速度）×（反応時間＋停止時間）＋余裕という**概念理解のための簡略式**。規格に基づく安全距離の算定・審査を代替しません。
+- 待ち時間はKingmanの近似式、必要件数は正規近似（有意水準5%・検出力80%・両群同数）の簡略式。実際の設計では前提の確認が必要です。
+- リトルの法則は到着と完了が安定した期間の平均にのみ成り立ちます。4週後の見込みは単純な線形外挿です。
+- 類似度は二文字連鎖のJaccard係数で、意味の近さは判定しません。課題文の点検は語の有無による簡易ルールです。
+- Kirkpatrickの段階名、狩野モデルの分類表、Kraljicの象限名は一般的な整理を参照し、判定基準・数値・人物・企業はすべて独自の架空例です。
+- アンドン、段階展開、可搬範囲は実機・信号灯・フリート管理に接続していません。
+
+### 今回修正した既存の甘さ
+
+0. **業務例を半導体製造に統一**：見積比較・購買申請・経費精算・部品組立など一般製造業の例を、ホールドロットの処置（SPC値・装置履歴・前ロットの照合→解除/リワーク/スクラップ→MES登録）、ウェーハ外観検査（パーティクル・線幅ずれ・CMPパッド摩耗）、FOUP搬送（ベイ・ストッカー・ロードポート）、サブファブ巡回（真空ポンプ・ガスキャビネット）、装置PM、レシピ変更申請、後工程のトレイ供給・テスト・テープ&リール梱包へ置き換え。部門名も 品質保証・プロセス技術・装置保全・製造・生産管理 に揃えた。数値（月120件・35分→14分、21分短縮など）は変えていないため、試算と検査の期待値は従来どおり。
+1. **JSON書き出しのBOM**：すべてのダウンロードに先頭BOMを付けていたため、JSONがRFC 8259に反しパーサによっては読めなかった。JSONではBOMを付けず、CSV・テキストのみExcel向けに残す。
+2. **サイドバーの区切りが固定値**：ページ数が変わると区切り位置が崩れる作りだったため、区切りを配列で定義し、第3期の区切り（31ページ目）を追加。
+3. **ホームの入口**：第2期・第3期の20ページが一つの一覧に混ざらないよう、`wave` で分けて2つの入口を表示。
+4. **アイコンの欠落**：第2期16種と第3期50種の部品にサイドバー用アイコンがなく、すべて同じ文書アイコンになっていた。
+5. **7列レイアウトの横はみ出し**：格子列を `minmax(0, 1fr)` にし、1440px幅で全200ページのはみ出しを0に。
+
+## 第2期（各10ページ・計50ページ）
 
 2026年9月16日。公開された一次資料を読み、前回の100ページに足りなかった「根拠・条件差・継続運用・例外・効果の検証」を補いました。以下の画面は出典の製品画面や本文のコピーではなく、考え方を業務シーンに応用した独自設計です。
 

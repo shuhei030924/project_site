@@ -16,6 +16,10 @@
   background: white;
   margin-bottom: 24px;
 }
+.deep-dive-launch.secondary {
+  background: transparent;
+  border-style: dashed;
+}
 .deep-dive-launch h2 {
   font-size: 19px;
   margin: 10px 0;

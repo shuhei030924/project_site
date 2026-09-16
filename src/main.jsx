@@ -52,8 +52,12 @@ import {
 import { sites, allPages, sources } from "./data";
 import { useSaved, pageSnapshot, hasStorageError } from "./storage";
 import { advancedComponents, advancedUsage, ResearchNote } from "./advanced";
+import { frontierComponents, frontierUsage } from "./frontier";
+import { ActivityMap, activityComponents, activityUsage } from "./activity";
+import "./activity.css";
 import "./style.css";
 import "./advanced.css";
+import "./frontier.css";
 
 const icons = { Sparkles, Bot, Handshake, Workflow, Lightbulb };
 const pageIcons = {
@@ -87,6 +91,72 @@ const pageIcons = {
   handoff: ArrowUpRight,
   a3: FileText,
   editor: FileText,
+  modelcalc: Calculator,
+  benchmark: SlidersHorizontal,
+  cohort: ChartNoAxesCombined,
+  scenario: Target,
+  quiz: ClipboardCheck,
+  redaction: ShieldCheck,
+  scheduler: Clock,
+  risk: ShieldCheck,
+  evidence: CheckCheck,
+  weighted: SlidersHorizontal,
+  logaudit: Search,
+  variants: GitBranch,
+  valuestream: Workflow,
+  rules: GitBranch,
+  control: Activity,
+  ledger: Layers,
+  chain: GitBranch,
+  journey: MapPin,
+  ladder: Layers,
+  tree: GitBranch,
+  spaced: CalendarDays,
+  pairing: Users,
+  claims: CheckCheck,
+  editdiff: FileText,
+  pathbuilder: BookOpen,
+  calibration: Target,
+  andon: Activity,
+  zone: ShieldCheck,
+  canary: GitBranch,
+  hierarchy: Layers,
+  replay: Clock,
+  waterfall: ChartNoAxesCombined,
+  queue: Activity,
+  heatmap: Grip,
+  envelope: Battery,
+  yamazumi: ChartNoAxesCombined,
+  premortem: Target,
+  quadrant: Grip,
+  triangulate: CheckCheck,
+  concentration: ChartNoAxesCombined,
+  split: SlidersHorizontal,
+  bipartite: Workflow,
+  brieflint: FileText,
+  samplesize: Calculator,
+  pricing: Calculator,
+  milestonepay: Clock,
+  sipoc: Layers,
+  spaghetti: MapPin,
+  heijunka: ChartNoAxesCombined,
+  busfactor: Users,
+  daylog: Clock,
+  fieldaudit: ClipboardCheck,
+  approvals: CheckCheck,
+  conformance: Search,
+  blueprint: Workflow,
+  terms: MessageSquare,
+  kano: SlidersHorizontal,
+  flowlaw: Activity,
+  pokayoke: ShieldCheck,
+  catchball: MessageSquare,
+  cd3: Calculator,
+  changeload: CalendarDays,
+  dedupe: Search,
+  alignment: Users,
+  issuetree: GitBranch,
+  sla: Clock,
 };
 const href = (site, page = "overview") => `#/${site}/${page}`;
 function getRoute() {
@@ -99,7 +169,9 @@ function getRoute() {
 const number = (n) =>
   new Intl.NumberFormat("ja-JP", { maximumFractionDigits: 1 }).format(n);
 function download(name, text, type = "text/plain;charset=utf-8") {
-  const u = URL.createObjectURL(new Blob(["\uFEFF" + text], { type }));
+  // BOMはExcel向けのCSV/テキストのみ。JSONに付けるとRFC 8259違反でパーサが拒否することがある。
+  const bom = type.startsWith("application/json") ? "" : "\uFEFF";
+  const u = URL.createObjectURL(new Blob([bom + text], { type }));
   const a = document.createElement("a");
   a.href = u;
   a.download = name;
@@ -241,17 +313,10 @@ function App() {
           WORKSPACE <span>{site.pages.length} PAGES</span>
         </div>
         <nav aria-label={`${site.name}のページ`}>
-          {site.pages.map((p, i) => {
+          {site.pages.map((p) => {
             const I = pageIcons[p.type] || FileText;
             return (
               <React.Fragment key={p.id}>
-                {i === 6 && <div className="nav-section">実践・検証</div>}
-                {i === 14 && <div className="nav-section">展開・成果</div>}
-                {i === 20 && (
-                  <div className="nav-section">
-                    深掘り・意思決定 <span className="new-label">NEW 10</span>
-                  </div>
-                )}
                 <a
                   className={"nav-item " + (page.id === p.id ? "active" : "")}
                   href={href(site.id, p.id)}
@@ -352,7 +417,7 @@ function App() {
             <div className="heading-actions">
               <span className="date-label">
                 <CalendarDays size={15} />
-                2026年9月16日
+                2026年9月17日
               </span>
               <button
                 className="button secondary compact"
@@ -419,8 +484,8 @@ function App() {
           {modal === "directory" ? (
             <>
               <p>
-                人材育成 → 業務分析 → 改善管理 → 技術探索 →
-                実装。5つの取り組みで、変革のサイクルをつくります。
+                人材・文化、業務理解、改善管理、外部技術、現場実装。
+                必要な活動を組み合わせ、成果と学びを次の改善へ戻します。
               </p>
               <div className="directory-grid">
                 {sites.map((s) => (
@@ -583,8 +648,8 @@ function Dashboard({ site, page }) {
             [
               "22",
               "SEP",
-              "緊急発注フローの現場レビュー",
-              "15:00–16:00 / 調達チーム",
+              "夜間ホールド処置フローの現場レビュー",
+              "15:00–16:00 / プロセス技術チーム",
             ],
           ],
         }
@@ -652,6 +717,7 @@ function Dashboard({ site, page }) {
           </a>
         </section>
       </div>
+      <ActivityMap site={site} />
       <div className="metrics">
         {site.metrics.map(([label, value, unit, note], i) => (
           <section className="metric" key={label}>
@@ -672,13 +738,32 @@ function Dashboard({ site, page }) {
       </div>
       <section className="deep-dive-launch">
         <div>
-          <span className="eyebrow">NEW / 10 DEEPER PERSPECTIVES</span>
-          <h2>次の判断を、もう一段深く。</h2>
-          <p>根拠・例外・実現条件まで確認する、新しい10のページ。</p>
+          <span className="eyebrow">FIELD-TESTED METHODS</span>
+          <h2>現場の型と数理を、手を動かして学ぶ。</h2>
+          <p>
+            リーン・品質工学・安全・ソフトウェア運用の定石を、この仕事に当てはめた10ページ。
+          </p>
         </div>
         <div className="deep-dive-links">
           {site.pages
-            .filter((p) => p.advanced)
+            .filter((p) => p.wave === 3)
+            .map((p) => (
+              <a key={p.id} href={href(site.id, p.id)}>
+                {p.title}
+                <ArrowUpRight size={14} />
+              </a>
+            ))}
+        </div>
+      </section>
+      <section className="deep-dive-launch secondary">
+        <div>
+          <span className="eyebrow">DEEPER PERSPECTIVES</span>
+          <h2>次の判断を、もう一段深く。</h2>
+          <p>根拠・例外・実現条件まで確認する10のページ。</p>
+        </div>
+        <div className="deep-dive-links">
+          {site.pages
+            .filter((p) => p.wave === 2)
             .map((p) => (
               <a key={p.id} href={href(site.id, p.id)}>
                 {p.title}
@@ -884,6 +969,8 @@ function Page({ site, page, notify }) {
   const props = { page, site, storageKey: key, notify };
   const Components = {
     ...advancedComponents,
+    ...frontierComponents,
+    ...activityComponents,
     catalog: Catalog,
     stories: Stories,
     people: People,
@@ -926,6 +1013,8 @@ function Page({ site, page, notify }) {
           {
             {
               ...advancedUsage,
+              ...frontierUsage,
+              ...activityUsage,
               catalog: "カードを開き、内容を確認して保存。",
               stories: "事例を開き、再現するときの条件を確認。",
               people: "担当者の専門を確認し、相談メモを保存。",
@@ -959,8 +1048,14 @@ function Page({ site, page, notify }) {
           }
         </span>
       </div>
-      <Component {...props} />
-      {page.advanced && page.note && !advancedComponents[page.type] && (
+      {frontierComponents[page.type] ? (
+        <div className="frontier">
+          <Component {...props} />
+        </div>
+      ) : (
+        <Component {...props} />
+      )}
+      {page.advanced && page.note && !advancedComponents[page.type] && !frontierComponents[page.type] && (
         <div className="notice">
           <Info size={18} />
           <span>{page.note}</span>
@@ -2849,8 +2944,8 @@ function A3({ page, storageKey, notify }) {
         <div className="a3-header">
           <span>A3</span>
           <div>
-            <h2>見積比較の転記・照合時間を減らす</h2>
-            <p>担当：鈴木 美咲 / EGC-024 / 調達</p>
+            <h2>ホールドロット処置の転記・照合時間を減らす</h2>
+            <p>担当：鈴木 美咲 / EGC-024 / プロセス技術</p>
           </div>
           <Badge>改善ストーリー</Badge>
         </div>

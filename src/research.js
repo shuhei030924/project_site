@@ -54,4 +54,79 @@ export const research = {
     url: "https://www.universal-robots.com/blog/calculating-roi-and-payback-period-for-your-robotic-investment/",
     use: "導入費用に加えて運用の前提も確認する考え方を採用。ここでの式は税・割引率を含まない簡易試算です。",
   },
+  kirkpatrick: {
+    name: "Kirkpatrick Partners — The Kirkpatrick Model",
+    url: "https://www.kirkpatrickpartners.com/the-kirkpatrick-model/",
+    use: "反応・学習・行動・成果の4段階を、根拠のつながりとして確かめる考え方を採用。段階の名称は参照し、判定基準は独自です。",
+  },
+  journey: {
+    name: "Nielsen Norman Group — Journey Mapping 101",
+    url: "https://www.nngroup.com/articles/journey-mapping-101/",
+    use: "行為・考え・感情を段階ごとに並べ、機会を見つける構成を参考にしました。人物と場面は架空の例です。",
+  },
+  andon: {
+    name: "Lean Enterprise Institute — Andon",
+    url: "https://www.lean.org/lexicon-terms/andon/",
+    use: "異常を一目で知らせ、決められた位置で止め、応答者を呼ぶ考え方を参考にした演習。実機の信号系統には接続していません。",
+  },
+  cobot: {
+    name: "OSHA Technical Manual — Industrial Robot System Safety",
+    url: "https://www.osha.gov/otm/section-4-safety-hazards/chapter-4",
+    use: "速度・離隔監視、管理手段の階層、危険源の分類を学習用に整理。数値は概念理解のための簡略式で、正式なリスクアセスメントを代替しません。",
+  },
+  premortem: {
+    name: "Harvard Business Review — Performing a Project Premortem",
+    url: "https://hbr.org/2007/09/performing-a-project-premortem",
+    use: "「すでに失敗した」と仮定して理由を集める手法を採用。予兆を確認する時期を決める部分は独自の設計です。",
+  },
+  kraljic: {
+    name: "Harvard Business Review — Purchasing Must Become Supply Management",
+    url: "https://hbr.org/1983/09/purchasing-must-become-supply-management",
+    use: "供給リスクと事業影響の2軸で調達品目を分ける考え方を参考にしました。対象は品目・技術領域であり、企業そのものの格付けではありません。",
+  },
+  sipoc: {
+    name: "ASQ — SIPOC+CM Diagram",
+    url: "https://asq.org/quality-resources/sipoc",
+    use: "供給者・入力・工程・出力・顧客に制約と測定を加えた高い視点の整理を採用。抜けを示す検査は独自の簡易ルールです。",
+  },
+  spaghetti: {
+    name: "Lean Enterprise Institute — Spaghetti Chart",
+    url: "https://www.lean.org/lexicon-terms/spaghetti-chart/",
+    use: "物や人の移動経路を描き、距離と交差を見える化する考え方を採用。座標は架空のレイアウトです。",
+  },
+  heijunka: {
+    name: "Lean Enterprise Institute — Heijunka",
+    url: "https://www.lean.org/lexicon-terms/heijunka/",
+    use: "量と種類のばらつきを平準化し、必要な緩衝を考える視点を事務作業へ応用。数値は独自の例です。",
+  },
+  hoshin: {
+    name: "Lean Enterprise Institute — Hoshin Kanri",
+    url: "https://www.lean.org/lexicon-terms/hoshin-kanri/",
+    use: "方針を階層ごとに受け渡し、懸念を戻し合いながら整える考え方を参考にしました。方針の内容は架空です。",
+  },
+  little: {
+    name: "Little's Law（L = λW）",
+    url: "https://en.wikipedia.org/wiki/Little%27s_law",
+    use: "仕掛かり数・処理速度・滞留時間の関係を、改善案件の流れに当てはめました。到着と完了が安定している期間の平均にのみ成り立ちます。",
+  },
+  kano: {
+    name: "ASQ — Kano Model",
+    url: "https://asq.org/quality-resources/kano-model",
+    use: "当たり前・一元的・魅力的といった要求の性質を、二つの問いから分類する考え方を採用。分類表は一般的な整理を簡略化しています。",
+  },
+  pokayoke: {
+    name: "ASQ — Mistake Proofing (Poka-yoke)",
+    url: "https://asq.org/quality-resources/mistake-proofing",
+    use: "排除・置換・容易化・検出という順で対策を考え、検査の種類を分ける整理を採用。対策例は架空です。",
+  },
+  canary: {
+    name: "Google SRE Workbook — Canarying Releases",
+    url: "https://sre.google/workbook/canarying-releases/",
+    use: "変更を一部にだけ適用し、比較群と指標を見比べて進退を判断する考え方を、機体設定の段階展開に応用しました。",
+  },
+  busfactor: {
+    name: "Bus factor（知識の集中リスク）",
+    url: "https://en.wikipedia.org/wiki/Bus_factor",
+    use: "作業ごとに「何人抜けると止まるか」を数える見方を採用。相互訓練で数値がどう変わるかを試せます。",
+  },
 };
