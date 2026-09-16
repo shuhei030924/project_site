@@ -2,6 +2,11 @@ import React, { useRef, useState } from "react";
 import { ArrowDown, ArrowUpRight, Expand, Image as ImageIcon, X } from "lucide-react";
 import { visualGuides, guideAssets, guideKinds } from "./visual-guides-data";
 import { activityRoles } from "./activity-data";
+import { illustratedPageGuides } from "./card-illustrations-data";
+import { illustrationUrl } from "./card-illustrations";
+const galleryGuides = [...visualGuides, ...illustratedPageGuides];
+const galleryKinds = { ...guideKinds, cards: "画像カードで比べる" };
+export const visualGalleryCount = galleryGuides.length;
 
 const imageUrl = id => `${import.meta.env.BASE_URL}images/guides/${id}.png`;
 const route = g => `#/${g.site}/${g.page}`;
@@ -63,17 +68,17 @@ export function VisualGuide({ site, page }) {
 }
 
 function GuideCard({ guide, onChoose }) {
-  return <a className="guide-card" href={route(guide)} onClick={onChoose}><div><img src={imageUrl(guide.image)} alt="" width="1536" height="1024" loading="lazy" decoding="async" /><span>{guideKinds[guide.kind]}</span></div><small>{activityRoles[guide.site].name}</small><h3>{guide.title}</h3><p>{guide.lead}</p><span className="guide-card-action">画像で理解する<ArrowUpRight size={15} /></span></a>;
+  return <a className="guide-card" href={route(guide)} onClick={onChoose}><div><img src={guide.kind === "cards" ? illustrationUrl(guide.image) : imageUrl(guide.image)} alt="" width="1536" height="1024" loading="lazy" decoding="async" /><span>{galleryKinds[guide.kind]}</span></div><small>{activityRoles[guide.site].name}</small><h3>{guide.title}</h3><p>{guide.lead}</p><span className="guide-card-action">画像で理解する<ArrowUpRight size={15} /></span></a>;
 }
 
 export function VisualGuideShelf({ site }) {
-  const guides = visualGuides.filter(g => g.site === site.id);
+  const guides = galleryGuides.filter(g => g.site === site.id);
   return <section className="guide-shelf"><div className="section-title-row"><div><span className="eyebrow">SEE THE WORK / 現場から考える</span><h2>場面が見えると、次の一歩がわかる。</h2></div><span className="guide-count">{guides.length} VISUAL GUIDES</span></div><div className="guide-card-grid">{guides.map(g => <GuideCard key={g.page} guide={g} />)}</div></section>;
 }
 
 export function VisualGuideGallery({ onChoose }) {
   const [site, setSite] = useState("all");
   const [kind, setKind] = useState("all");
-  const guides = visualGuides.filter(g => (site === "all" || g.site === site) && (kind === "all" || g.kind === kind));
-  return <div className="guide-gallery"><p>改善前後、作業の注目点、現場の言葉、実証から展開まで。16ページを、目的に合わせた5つの見せ方で案内します。</p><div className="guide-gallery-filters"><label>活動で選ぶ<select value={site} onChange={e => setSite(e.target.value)}><option value="all">すべての活動</option>{Object.entries(activityRoles).map(([id,r]) => <option value={id} key={id}>{r.name}</option>)}</select></label><label>見せ方で選ぶ<select value={kind} onChange={e => setKind(e.target.value)}><option value="all">すべての見せ方</option>{Object.entries(guideKinds).map(([id,name]) => <option value={id} key={id}>{name}</option>)}</select></label><span role="status">{guides.length}ページ</span></div><div className="guide-card-grid">{guides.map(g => <GuideCard key={`${g.site}/${g.page}`} guide={g} onChoose={onChoose} />)}</div>{!guides.length && <p className="guide-empty">この組み合わせのガイドはありません。活動か見せ方を変更してください。</p>}</div>;
+  const guides = galleryGuides.filter(g => (site === "all" || g.site === site) && (kind === "all" || g.kind === kind));
+  return <div className="guide-gallery"><p>改善前後、作業の注目点、現場の言葉、実証から展開まで。画像カードも含めた{visualGalleryCount}ページを、目的に合わせて案内します。</p><div className="guide-gallery-filters"><label>活動で選ぶ<select value={site} onChange={e => setSite(e.target.value)}><option value="all">すべての活動</option>{Object.entries(activityRoles).map(([id,r]) => <option value={id} key={id}>{r.name}</option>)}</select></label><label>見せ方で選ぶ<select value={kind} onChange={e => setKind(e.target.value)}><option value="all">すべての見せ方</option>{Object.entries(galleryKinds).map(([id,name]) => <option value={id} key={id}>{name}</option>)}</select></label><span role="status">{guides.length}ページ</span></div><div className="guide-card-grid">{guides.map(g => <GuideCard key={`${g.site}/${g.page}`} guide={g} onChoose={onChoose} />)}</div>{!guides.length && <p className="guide-empty">この組み合わせのガイドはありません。活動か見せ方を変更してください。</p>}</div>;
 }

@@ -53,7 +53,7 @@
 | --- | --- | --- | --- |
 | 1 | [物理作業を変えるホーム](https://shuhei030924.github.io/project_site/#/robot/overview) | 巡回・点検・保守準備・部品搬送・材料搬送を対象に、複数技術のロードマップ、ROI、実証、拠点展開を管理します。 | 画像付きガイドへの入口 |
 | 2 | [フリート監視](https://shuhei030924.github.io/project_site/#/robot/fleet) | デモ時点 2026/09/16 14:30｜機体ごとの状態を確認。 | — |
-| 3 | [技術ポートフォリオ](https://shuhei030924.github.io/project_site/#/robot/portfolio) | 現場課題と技術領域をつなぐ。 | — |
+| 3 | [技術ポートフォリオ](https://shuhei030924.github.io/project_site/#/robot/portfolio) | 現場課題と技術領域をつなぐ。 | 技術・作業の画像カード |
 | 4 | [ミッション管理](https://shuhei030924.github.io/project_site/#/robot/missions) | 搬送依頼から完了まで、現場の作業を整理。 | 場面から学ぶ |
 | 5 | [搬送ルート設計](https://shuhei030924.github.io/project_site/#/robot/route) | 交差・待機ポイントを選び、ルートの条件を確認。 | — |
 | 6 | [導入適合性診断](https://shuhei030924.github.io/project_site/#/robot/readiness) | ロボットに合わせる前に、作業と環境を整理。 | 注目点を探る |
@@ -69,7 +69,7 @@
 | 16 | [工場の自動化領域マップ](https://shuhei030924.github.io/project_site/#/robot/parts) | AMR・CoBot・四足歩行・倉庫自動化・ウェーハ搬送を、現場の作業から理解する。 | 工場の領域マップ |
 | 17 | [シフト引き継ぎ](https://shuhei030924.github.io/project_site/#/robot/handover) | 次のシフトが迷わないよう、制約と対応を記録。 | — |
 | 18 | [受入判定](https://shuhei030924.github.io/project_site/#/robot/acceptance) | FOUP搬送AMR追加導入｜結果と根拠を確認して判定。 | — |
-| 19 | [現場の学び](https://shuhei030924.github.io/project_site/#/robot/lessons) | うまくいった条件と、見落としやすい制約。 | — |
+| 19 | [現場の学び](https://shuhei030924.github.io/project_site/#/robot/lessons) | うまくいった条件と、見落としやすい制約。 | 技術・作業の画像カード |
 | 20 | [自動化効果レポート](https://shuhei030924.github.io/project_site/#/robot/impact) | 2026年9月｜設備台数から、仕事の変化へ。 | — |
 | 21 | [タクトと搬送能力](https://shuhei030924.github.io/project_site/#/robot/line-capacity) | 平均速度ではなく、荷役と待ち時間を含む能力を確認。 | — |
 | 22 | [充電スロットの競合確認](https://shuhei030924.github.io/project_site/#/robot/charging) | 充電器1基に対して、時間帯が重なる機体を見つける。 | — |
@@ -98,8 +98,8 @@
 | --- | --- | --- | --- |
 | 1 | [外部の技術を取り込むホーム](https://shuhei030924.github.io/project_site/#/supplier/overview) | パートナーのAI・自動化・ロボット技術を探索し、比較、評価、PoC、標準化、横展開へつなげます。 | 画像付きガイドへの入口 |
 | 2 | [パートナーディレクトリ](https://shuhei030924.github.io/project_site/#/supplier/partners) | すべて架空の企業。得意領域から対話の相手を探す。 | — |
-| 3 | [技術ソリューション探索](https://shuhei030924.github.io/project_site/#/supplier/solutions) | 機能だけでなく、適用条件と実証状況を比較。 | — |
-| 4 | [共創チャレンジ](https://shuhei030924.github.io/project_site/#/supplier/challenges) | 解くべき課題を明確にして、提案を集める。 | — |
+| 3 | [技術ソリューション探索](https://shuhei030924.github.io/project_site/#/supplier/solutions) | 機能だけでなく、適用条件と実証状況を比較。 | 技術・作業の画像カード |
+| 4 | [共創チャレンジ](https://shuhei030924.github.io/project_site/#/supplier/challenges) | 解くべき課題を明確にして、提案を集める。 | 技術・作業の画像カード |
 | 5 | [課題ブリーフ作成](https://shuhei030924.github.io/project_site/#/supplier/brief) | 解決手段を決めつけず、現状と成功条件を伝える。 | — |
 | 6 | [技術レーダー](https://shuhei030924.github.io/project_site/#/supplier/radar) | 成熟度と現場適合性を分けて、検証の優先度を把握。 | — |
 | 7 | [課題と技術のマッチング](https://shuhei030924.github.io/project_site/#/supplier/matching) | 技術の魅力ではなく、課題への適合を評価。 | — |

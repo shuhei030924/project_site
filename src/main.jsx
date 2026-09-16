@@ -56,7 +56,9 @@ import { frontierComponents, frontierUsage } from "./frontier";
 import { ActivityMap, activityComponents, activityUsage } from "./activity";
 import { KnowledgeEntrances, knowledgeComponents, knowledgeUsage } from "./knowledge";
 import "./knowledge.css";
-import { VisualGuide, VisualGuideShelf, VisualGuideGallery } from "./visual-guides";
+import { VisualGuide, VisualGuideShelf, VisualGuideGallery, visualGalleryCount } from "./visual-guides";
+import { CardIllustration, IllustrationDetail, IllustrationNote, illustrationFor } from "./card-illustrations";
+import "./card-illustrations.css";
 import "./visual-guides.css";
 import "./activity.css";
 import "./style.css";
@@ -336,7 +338,7 @@ function App() {
         </nav>
         <div className="sidebar-bottom">
           <button onClick={() => setModal("visual-guides")}>
-            <Layers size={17} />画像で見るガイド<span>16</span>
+            <Layers size={17} />画像で見るガイド<span>{visualGalleryCount}</span>
           </button>
           <button onClick={() => setModal("directory")}>
             <Compass size={17} />
@@ -482,7 +484,7 @@ function App() {
       {modal && (
         <Modal
           title={
-            modal === "visual-guides" ? "画像で見る、16の業務ガイド" : modal === "directory"
+            modal === "visual-guides" ? `画像で見る、${visualGalleryCount}の業務ガイド` : modal === "directory"
               ? "5つのワークスペース"
               : "設計の参考・デモについて"
           }
@@ -1100,6 +1102,7 @@ function Catalog({ page, storageKey, notify }) {
         </div>
         <SearchBox value={query} onChange={setQuery} />
       </div>
+      <IllustrationNote pageKey={storageKey} />
       <div className="catalog-grid">
         {page.items
           .filter(
@@ -1113,11 +1116,11 @@ function Catalog({ page, storageKey, notify }) {
               className="catalog-card"
               onClick={() => setSelected(item)}
             >
-              <div className="catalog-art">
+              {illustrationFor(storageKey, item[0]) ? <CardIllustration visual={illustrationFor(storageKey, item[0])} number={page.items.indexOf(item) + 1} /> : <div className="catalog-art">
                 <span>{["Aa", "↗", "◎", "⌘"][i % 4]}</span>
                 <div className="art-lines" />
                 <span className="catalog-number">0{i + 1}</span>
-              </div>
+              </div>}
               <div className="catalog-body">
                 <Badge>{item[1]}</Badge>
                 {saved.includes(item[0]) && (
@@ -1144,6 +1147,7 @@ function Catalog({ page, storageKey, notify }) {
       ) && <Empty />}
       {selected && (
         <Modal title={selected[0]} onClose={() => setSelected(null)}>
+          <IllustrationDetail visual={illustrationFor(storageKey, selected[0])} />
           <Badge>{selected[1]}</Badge>
           <p className="large-copy">{selected[2]}</p>
           <div className="notice">
@@ -1222,9 +1226,11 @@ function Stories({ page, storageKey, notify }) {
   const [saved, setSaved] = useSaved(storageKey, []);
   return (
     <>
+      <IllustrationNote pageKey={storageKey} />
       <div className="story-grid">
         {page.items.map((r, i) => (
-          <article key={r[0]} className="story">
+          <article key={r[0]} className={`story ${illustrationFor(storageKey, r[0]) ? "illustrated-story" : ""}`}>
+            {illustrationFor(storageKey, r[0]) && <CardIllustration visual={illustrationFor(storageKey, r[0])} number={i + 1} compact />}
             <div className="story-top">
               <span>FIELD NOTE / 0{i + 1}</span>
               <ArrowUpRight />
@@ -1244,6 +1250,7 @@ function Stories({ page, storageKey, notify }) {
       </div>
       {item && (
         <Modal title={item[0]} onClose={() => setItem(null)}>
+          <IllustrationDetail visual={illustrationFor(storageKey, item[0])} />
           <div className="result-callout">{item[2]}</div>
           <h3>{page.storyHeading || "現場で実施したこと"}</h3>
           <p>{item[3]}</p>

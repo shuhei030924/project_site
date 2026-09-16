@@ -1,0 +1,54 @@
+{
+  "created": "2026-09-17",
+  "method": "Built-in image_gen tool; one generation per asset",
+  "images": [
+    {
+      "id": "amr",
+      "prompt": "Use case: scientific-educational. Create one landscape 1536x1024 raster illustration for a Japanese semiconductor manufacturing knowledge website, not a screenshot or UI. Style: polished isometric technical editorial illustration, precise readable machinery, soft matte white and pale blue surfaces, restrained cobalt and teal accents, warm grey floor, subtle soft shadows, clean off-white background. Show a concrete understandable work scene, centered with generous 10 percent margins, all important objects fully visible. No text, letters, numbers, labels, logos, watermarks, charts, fake UI, or infographic panels. This is a generic concept, not a specific manufacturer's product or an engineering drawing. Subject: a low wheeled autonomous mobile robot carrying two neatly enclosed maintenance-parts totes through a semiconductor facility service corridor. Clearly show the compact wheeled base, front lidar, load secured on the platform, and a nearby receiving rack as destination. Three-quarter front view, robot dominant and fully visible. No humanoid and no robot arm, no exposed wafers, no people in its path.",
+      "path": "public/images/technologies/amr.png",
+      "webPath": "public/images/technologies/amr.webp"
+    },
+    {
+      "id": "cobot",
+      "prompt": "Use case: scientific-educational. Create one landscape 1536x1024 raster illustration for a Japanese semiconductor manufacturing knowledge website, not a screenshot or UI. Style: polished isometric technical editorial illustration, precise readable machinery, soft matte white and pale blue surfaces, restrained cobalt and teal accents, warm grey floor, subtle soft shadows, clean off-white background. Show a concrete understandable work scene, centered with generous 10 percent margins, all important objects fully visible. No text, letters, numbers, labels, logos, watermarks, charts, fake UI, or infographic panels. This is a generic concept, not a specific manufacturer's product or an engineering drawing. Subject: a six-axis collaborative robot arm on a fixed workstation transferring a small rigid semiconductor test tray between an input nest and a test-fixture nest. Clearly show robot base, coherent six-joint arm, one gripper holding exactly one tray, and aligned input and output fixtures. Wide three-quarter view, complete arm and tabletop in frame. No humans within the workspace, no welding, no humanoid, no exposed silicon wafer.",
+      "path": "public/images/technologies/cobot.png",
+      "webPath": "public/images/technologies/cobot.webp"
+    },
+    {
+      "id": "quadruped",
+      "prompt": "Use case: scientific-educational. Create one landscape 1536x1024 raster illustration for a Japanese semiconductor manufacturing knowledge website, not a screenshot or UI. Style: polished isometric technical editorial illustration, precise readable machinery, soft matte white and pale blue surfaces, restrained cobalt and teal accents, warm grey floor, subtle soft shadows, clean off-white background. Show a concrete understandable work scene, centered with generous 10 percent margins, all important objects fully visible. No text, letters, numbers, labels, logos, watermarks, charts, fake UI, or infographic panels. This is a generic concept, not a specific manufacturer's product or an engineering drawing. Subject: generic four-legged industrial inspection robot with a compact camera and thermal sensing head, standing in a tidy semiconductor subfab equipment aisle, looking at a set of circular pressure gauges and pipework. The four legs and sensor head must be clearly identifiable, robot occupying foreground with instruments at its eye level on right. Cool white robot with teal detailing, not a yellow branded robot. No people, no exposed wafers.",
+      "path": "public/images/technologies/quadruped.png",
+      "webPath": "public/images/technologies/quadruped.webp"
+    },
+    {
+      "id": "warehouse",
+      "prompt": "Use case: scientific-educational. Create one landscape 1536x1024 raster illustration for a Japanese semiconductor manufacturing knowledge website, not a screenshot or UI. Style: polished isometric technical editorial illustration, precise readable machinery, soft matte white and pale blue surfaces, restrained cobalt and teal accents, warm grey floor, subtle soft shadows, clean off-white background. Show a concrete understandable work scene, centered with generous 10 percent margins, all important objects fully visible. No text, letters, numbers, labels, logos, watermarks, charts, fake UI, or infographic panels. This is a generic concept, not a specific manufacturer's product or an engineering drawing. Subject: maintenance parts warehouse automation, a compact automated storage and retrieval installation shown in clear cutaway isometric view: two racks of uniform enclosed bins, an automated vertical lift shuttle retrieving a single bin, and an output workstation at front. Make the movement chain visually obvious through the physical arrangement, not arrows. No people, no humanoid, no loose silicon wafers. Shelves and shuttle fully visible.",
+      "path": "public/images/technologies/warehouse.png",
+      "webPath": "public/images/technologies/warehouse.webp"
+    },
+    {
+      "id": "wafer-logistics",
+      "prompt": "Use case: scientific-educational. Create one landscape 1536x1024 raster illustration for a Japanese semiconductor manufacturing knowledge website, not a screenshot or UI. Style: polished isometric technical editorial illustration, precise readable machinery, soft matte white and pale blue surfaces, restrained cobalt and teal accents, warm grey floor, subtle soft shadows, clean off-white background. Show a concrete understandable work scene, centered with generous 10 percent margins, all important objects fully visible. No text, letters, numbers, labels, logos, watermarks, charts, fake UI, or infographic panels. This is a generic concept, not a specific manufacturer's product or an engineering drawing. Subject: semiconductor cleanroom overhead hoist transport, a straight ceiling rail with one OHT carrier suspending a closed FOUP wafer container directly above an equipment load port, with a second closed FOUP seated on the adjacent load port. Show the rail overhead, hoist carrier, closed container, and receiving process tool as one physically coherent three-quarter cutaway scene. FOUP is a rectangular enclosed cleanroom wafer carrier, no exposed wafers, no open box, no robot arm, no people.",
+      "path": "public/images/technologies/wafer-logistics.png",
+      "webPath": "public/images/technologies/wafer-logistics.webp"
+    },
+    {
+      "id": "wafer-inspection",
+      "prompt": "Use case: scientific-educational. Generate one 1536x1024 landscape raster illustration for a Japanese semiconductor manufacturing knowledge website. Polished isometric technical editorial illustration with precise readable machinery, matte white and pale blue surfaces, subtle cobalt and teal accents, warm grey floor and soft off-white background, gentle shadows. Center the entire important subject with generous margins so the work scene is understandable at card size. No text, labels, numbers, letters, logos, watermarks, graphs, chart panels, UI, or decorative arrows. Generic conceptual illustration, not a certified engineering diagram or a specific product. Show a wafer optical inspection station in an enclosed clean machine with a transparent front window. Inside, one circular patterned silicon wafer rests flat on its inspection stage beneath a distinct overhead camera and ring illumination assembly. The camera, lighting and wafer should be visually clear, single coherent three-quarter view, with the machine's front window allowing the optical path to be understood. No worker touching wafer, no robot arm, no huge unrealistic glowing chip.",
+      "path": "public/images/technologies/wafer-inspection.png",
+      "webPath": "public/images/technologies/wafer-inspection.webp"
+    },
+    {
+      "id": "pump-monitoring",
+      "prompt": "Use case: scientific-educational. Generate one 1536x1024 landscape raster illustration for a Japanese semiconductor manufacturing knowledge website. Polished isometric technical editorial illustration with precise readable machinery, matte white and pale blue surfaces, subtle cobalt and teal accents, warm grey floor and soft off-white background, gentle shadows. Center the entire important subject with generous margins so the work scene is understandable at card size. No text, labels, numbers, letters, logos, watermarks, graphs, chart panels, UI, or decorative arrows. Generic conceptual illustration, not a certified engineering diagram or a specific product. Show a semiconductor subfab dry vacuum pump monitoring scene: a compact blue-grey pump body, inlet and outlet pipework, a small attached vibration sensor securely mounted on the housing with a thin lead connecting to a small nearby data-acquisition box. Three-quarter view with the pump and sensor dominant, entire assembly visible. A neat service aisle and simplified additional equipment in background. No gauges with text, no dashboard, no big floating signals, no leaking gas or steam.",
+      "path": "public/images/technologies/pump-monitoring.png",
+      "webPath": "public/images/technologies/pump-monitoring.webp"
+    },
+    {
+      "id": "cleanroom-air",
+      "prompt": "Use case: scientific-educational. Generate one 1536x1024 landscape raster illustration for a Japanese semiconductor manufacturing knowledge website. Polished isometric technical editorial illustration with precise readable machinery, matte white and pale blue surfaces, subtle cobalt and teal accents, warm grey floor and soft off-white background, gentle shadows. Center the entire important subject with generous margins so the work scene is understandable at card size. No text, labels, numbers, letters, logos, watermarks, graphs, chart panels, UI, or decorative arrows. Generic conceptual illustration, not a certified engineering diagram or a specific product. Show a clear architectural cutaway of a small semiconductor cleanroom with a ceiling grid of fan filter units, a few enclosed process tools, and a visible underfloor return-air plenum plus side air-handling unit. A few subtle translucent pale cyan airflow ribbons connect supply ceiling, room, and return plenum, without arrowheads or labels. Physical facilities and air circulation should be understandable. Clean and calm, no people, no exposed wafers, no dramatic wind, no pollution, no numerical specifications.",
+      "path": "public/images/technologies/cleanroom-air.png",
+      "webPath": "public/images/technologies/cleanroom-air.webp"
+    }
+  ]
+}

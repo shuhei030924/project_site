@@ -4,6 +4,12 @@ GAIN、Robot、Supplier Engagement、Workflow Mapper、EGC の5サイト、**各
 
 **公開サイト:** https://shuhei030924.github.io/project_site/
 
+## 技術を姿と仕事で理解する画像カード
+
+**8点を新規生成し、4ページ・15カードに画像を追加**しました。[技術ポートフォリオ](https://shuhei030924.github.io/project_site/#/robot/portfolio)のAMR・CoBot・四足歩行・倉庫自動化・ウェーハ搬送を、それぞれの作業場面で見比べられます。[技術ソリューション探索](https://shuhei030924.github.io/project_site/#/supplier/solutions)、[現場の学び](https://shuhei030924.github.io/project_site/#/robot/lessons)、[共創チャレンジ](https://shuhei030924.github.io/project_site/#/supplier/challenges)にも追加しました。
+
+カードの詳細では大きな画像、見る場所、対象作業、確認条件、次に検討するページを案内します。原寸画像も開けます。左メニューの画像ガイドは**20ページ**へ拡張。通常表示は軽量なWebPを使い、生成PNGも保持しています。[画像一覧・追加理由](docs/card-illustrations-2026-09-17.md)と[最終プロンプト全文](docs/card-illustration-prompts.json)を保存しました。
+
 ## AIニュース・ナレッジ共有を中心に8ページを再設計
 
 全200ページの用途を見直し、重複する投稿・表彰・比較などを、日々の問いと知見が循環するページへ置き換えました。既存URLとページ数は維持しています。

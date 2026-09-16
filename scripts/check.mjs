@@ -5,6 +5,7 @@ import { visualGuides, guideAssets, guideKinds } from "../src/visual-guides-data
 import { research } from "../src/research.js";
 import { extraPages } from "../src/advanced-data.js";
 import { frontierPages } from "../src/frontier-data.js";
+import { technologyAssets, cardIllustrations, illustratedPageGuides } from "../src/card-illustrations-data.js";
 import { replacementPages, newsItems, initialKnowledge, knowledgeGroups, pipelineGate, initialPipeline } from "../src/knowledge-data.js";
 import {
   calculateModel,
@@ -33,6 +34,24 @@ assert.equal(sites.length, 5);
 assert.equal(allPages.length, 200);
 // 知見の関係先・ニュースの根拠・仕掛かり制限を検証する。
 const routeSet = new Set(sites.flatMap(s => s.pages.map(p => `#/${s.id}/${p.id}`)));
+for (const [key, cards] of Object.entries(cardIllustrations)) {
+  const [siteId, pageId] = key.split("/");
+  const page = sites.find(s => s.id === siteId)?.pages.find(p => p.id === pageId);
+  assert(page && ["catalog", "stories"].includes(page.type), `Illustrated page: ${key}`);
+  assert.equal(Object.keys(cards).length, page.items.length, `Every card illustrated: ${key}`);
+  for (const [title, visual] of Object.entries(cards)) {
+    assert(page.items.some(i => i[0] === title), `Illustrated item: ${key}/${title}`);
+    assert(technologyAssets[visual.image]?.alt && visual.look && visual.work && visual.check);
+    assert(routeSet.has(visual.route), `Illustrated next action: ${key}/${title}`);
+  }
+}
+for (const asset of Object.values(technologyAssets)) {
+  for (const file of [asset.file, asset.original]) assert(existsSync(new URL(`../public/images/${file}`, import.meta.url)), `Missing illustration: ${file}`);
+}
+for (const guide of illustratedPageGuides) {
+  assert(routeSet.has(`#/${guide.site}/${guide.page}`));
+  assert(cardIllustrations[`${guide.site}/${guide.page}`] && technologyAssets[guide.image]);
+}
 for (const n of initialKnowledge) {
   assert(knowledgeGroups.some(g => g.id === n.group));
   assert(n.relation && n.detail && n.evidence);
