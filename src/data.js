@@ -1,3 +1,5 @@
+import { extraPages } from "./advanced-data.js";
+import { research } from "./research.js";
 export const sources = [
   {
     name: "Microsoft Adoption",
@@ -1482,6 +1484,81 @@ export const sites = [
     ],
   },
 ];
+sites.forEach((site) => site.pages.push(...extraPages[site.id]));
+const storyGuides = {
+  gain: {
+    id: "stories",
+    guides: [
+      [
+        "同じ20件の報告を2人が従来手順・新手順で処理し、総時間を比較。",
+        "工程名辞書を版管理し、数値の原文照合時間も測定。",
+        "誤記が1件でもあれば原因を記録。月20回なら40分×20÷60＝13.3時間の見込み。",
+      ],
+      [
+        "納期・型番を置換した10種類のメールで下書きを試す。",
+        "日付、数量、相手への約束を担当者が確認し、修正時間も含める。",
+        "翻訳の流暢さと、業務条件の正しさを別々に採点。",
+      ],
+      [
+        "設備固有の略語を20語収集し、熟練者が意味を確認。",
+        "過去の点検記録5件を新任者が検索し、必要情報にたどり着けるか確認。",
+        "原因の推測は事実と分離し、原記録への参照を残す。",
+      ],
+    ],
+  },
+  robot: {
+    id: "lessons",
+    guides: [
+      [
+        "停止ログを1週間取得し、物品の仮置きによる停止だけを分類。",
+        "同じルート・シフトで区画前後の停止分数を比較。",
+        "繁忙時にも区画が守られるか、現場責任者と30日後に確認。",
+      ],
+      [
+        "品種3種類の治具交換と再設定を工程別に計時。",
+        "共通治具で品質を維持できるか、品種ごとに試運転。",
+        "18分から7分の差に、試運転・確認作業が含まれるかを照合。",
+      ],
+      [
+        "設備稼働中の夜間ルートで、通信断の場所・時刻を記録。",
+        "ネットワーク担当とアクセスポイントの調整後に同じルートで測定。",
+        "通信断時の停止と、復帰判断の手順も現地で確認。",
+      ],
+    ],
+  },
+  supplier: {
+    id: "challenges",
+    guides: [
+      [
+        "0.2mmのキズを含む画像と、正常品を条件別に準備。",
+        "見逃しと誤検知の分母を別に定義し、判定者を決める。",
+        "同じ評価セット・照明条件で候補を比較し、構内の制約も提示。",
+      ],
+      [
+        "計器120点の位置、読み取り方法、巡回時間を現地で計測。",
+        "読めない計器・暗所・通信断を実証ケースに含める。",
+        "作業者の確認が必要な箇所を残し、代替手順も評価。",
+      ],
+      [
+        "温湿度の許容範囲と、基準期間の電力使用を施設担当と確認。",
+        "生産量と外気条件を揃えて比較し、単純な前月比で判断しない。",
+        "品質条件に近づいた場合の停止・切戻しを事前に合意。",
+      ],
+    ],
+  },
+};
+for (const [id, config] of Object.entries(storyGuides)) {
+  const page = sites
+    .find((s) => s.id === id)
+    .pages.find((p) => p.id === config.id);
+  page.guides = config.guides;
+  if (id === "supplier") page.storyHeading = "求める解決と制約";
+}
+sources.push(
+  ...Object.values(research).filter(
+    (r) => !sources.some((s) => s.url === r.url),
+  ),
+);
 export const allPages = sites.flatMap((s) =>
   s.pages.map((p) => ({ ...p, siteId: s.id, siteName: s.name })),
 );

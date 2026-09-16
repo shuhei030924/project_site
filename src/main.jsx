@@ -50,7 +50,10 @@ import {
   PanelLeftClose,
 } from "lucide-react";
 import { sites, allPages, sources } from "./data";
+import { useSaved, pageSnapshot, hasStorageError } from "./storage";
+import { advancedComponents, advancedUsage, ResearchNote } from "./advanced";
 import "./style.css";
+import "./advanced.css";
 
 const icons = { Sparkles, Bot, Handshake, Workflow, Lightbulb };
 const pageIcons = {
@@ -93,21 +96,6 @@ function getRoute() {
     page: p || "overview",
   };
 }
-function useSaved(key, initial) {
-  const [value, setValue] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("forward:" + key)) ?? initial;
-    } catch {
-      return initial;
-    }
-  });
-  useEffect(() => {
-    try {
-      localStorage.setItem("forward:" + key, JSON.stringify(value));
-    } catch {}
-  }, [key, value]);
-  return [value, setValue];
-}
 const number = (n) =>
   new Intl.NumberFormat("ja-JP", { maximumFractionDigits: 1 }).format(n);
 function download(name, text, type = "text/plain;charset=utf-8") {
@@ -133,6 +121,13 @@ function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [modal, setModal] = useState(null);
   const [toast, setToast] = useState("");
+  const [storageWarning, setStorageWarning] = useState(false);
+  useEffect(() => {
+    const handle = () => setStorageWarning(true);
+    window.addEventListener("forward-storage-error", handle);
+    if (hasStorageError()) handle();
+    return () => window.removeEventListener("forward-storage-error", handle);
+  }, []);
   const site = route.site,
     page = site.pages.find((p) => p.id === route.page) || site.pages[0];
   useEffect(() => {
@@ -149,6 +144,14 @@ function App() {
   }, []);
   useEffect(() => {
     document.title = `${page.title} · ${site.name} | FORWARD`;
+    const nav = document.querySelector(".sidebar nav"),
+      active = nav?.querySelector('[aria-current="page"]');
+    if (nav && active) {
+      const n = nav.getBoundingClientRect(),
+        r = active.getBoundingClientRect();
+      if (r.top < n.top || r.bottom > n.bottom)
+        nav.scrollTop += r.top - n.top - 18;
+    }
   }, [site, page]);
   useEffect(() => {
     if (!toast) return;
@@ -235,7 +238,7 @@ function App() {
           )}
         </div>
         <div className="nav-heading">
-          WORKSPACE <span>20 PAGES</span>
+          WORKSPACE <span>{site.pages.length} PAGES</span>
         </div>
         <nav aria-label={`${site.name}のページ`}>
           {site.pages.map((p, i) => {
@@ -244,6 +247,11 @@ function App() {
               <React.Fragment key={p.id}>
                 {i === 6 && <div className="nav-section">実践・検証</div>}
                 {i === 14 && <div className="nav-section">展開・成果</div>}
+                {i === 20 && (
+                  <div className="nav-section">
+                    深掘り・意思決定 <span className="new-label">NEW 10</span>
+                  </div>
+                )}
                 <a
                   className={"nav-item " + (page.id === p.id ? "active" : "")}
                   href={href(site.id, p.id)}
@@ -260,7 +268,7 @@ function App() {
         <div className="sidebar-bottom">
           <button onClick={() => setModal("directory")}>
             <Compass size={17} />
-            5つのワークスペース<span>100</span>
+            5つのワークスペース<span>{allPages.length}</span>
           </button>
           <button onClick={() => setModal("sources")}>
             <BookOpen size={17} />
@@ -293,13 +301,13 @@ function App() {
             <div className="search-wrap">
               <Search size={17} />
               <input
-                aria-label="100ページから検索"
+                aria-label={`${allPages.length}ページから検索`}
                 placeholder="ページを検索…"
                 value={search}
                 onFocus={() => setSearchOpen(true)}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <span className="search-hint">100</span>
+              <span className="search-hint">{allPages.length}</span>
               {searchOpen && (
                 <div className="search-results">
                   <div className="search-result-heading">
@@ -307,7 +315,7 @@ function App() {
                       ? `${matches.length}件のページ`
                       : "ワークスペースを横断して検索"}
                   </div>
-                  {matches.slice(0, 20).map((p) => (
+                  {(search ? matches : matches.slice(0, 20)).map((p) => (
                     <a key={p.siteId + p.id} href={href(p.siteId, p.id)}>
                       <span>
                         {p.title}
@@ -349,28 +357,35 @@ function App() {
               <button
                 className="button secondary compact"
                 onClick={() => {
-                  download(
-                    `${site.id}-${page.id}.json`,
-                    JSON.stringify(
-                      {
-                        workspace: site.name,
-                        page: page.title,
-                        sample: true,
-                        data: page,
-                      },
-                      null,
-                      2,
-                    ),
-                    "application/json",
-                  );
-                  notify("このページのサンプルデータを書き出しました");
+                  try {
+                    download(
+                      `${site.id}-${page.id}.json`,
+                      JSON.stringify(pageSnapshot(site, page), null, 2),
+                      "application/json",
+                    );
+                    notify(
+                      "初期データと保存済みの編集記録を書き出しました（未保存の入力は対象外）",
+                    );
+                  } catch {
+                    notify(
+                      "記録を読み出せませんでした。ブラウザの保存設定を確認してください。",
+                    );
+                  }
                 }}
               >
                 <Download size={15} />
-                データを書き出す
+                保存済み記録を書き出す
               </button>
             </div>
           </div>
+          {storageWarning && (
+            <div className="notice warning" role="alert">
+              <Info size={20} />
+              <span>
+                ブラウザへの保存に失敗しました。現在の操作は画面に反映されますが、再読み込み後に残らない場合があります。保存容量・設定を確認してください。
+              </span>
+            </div>
+          )}
           <Page
             key={site.id + "/" + page.id}
             site={site}
@@ -421,15 +436,17 @@ function App() {
                     <h3>{s.name}</h3>
                     <p>{s.short}</p>
                     <span>
-                      20ページ <ArrowRight size={15} />
+                      {s.pages.length}ページ <ArrowRight size={15} />
                     </span>
                   </a>
                 ))}
               </div>
-              <h3>全100ページの一覧</h3>
+              <h3>全{allPages.length}ページの一覧</h3>
               {sites.map((s) => (
                 <details key={s.id}>
-                  <summary>{s.name} · 20ページ</summary>
+                  <summary>
+                    {s.name} · {s.pages.length}ページ
+                  </summary>
                   <div className="page-directory">
                     {s.pages.map((p) => (
                       <a
@@ -653,6 +670,23 @@ function Dashboard({ site, page }) {
           </section>
         ))}
       </div>
+      <section className="deep-dive-launch">
+        <div>
+          <span className="eyebrow">NEW / 10 DEEPER PERSPECTIVES</span>
+          <h2>次の判断を、もう一段深く。</h2>
+          <p>根拠・例外・実現条件まで確認する、新しい10のページ。</p>
+        </div>
+        <div className="deep-dive-links">
+          {site.pages
+            .filter((p) => p.advanced)
+            .map((p) => (
+              <a key={p.id} href={href(site.id, p.id)}>
+                {p.title}
+                <ArrowUpRight size={14} />
+              </a>
+            ))}
+        </div>
+      </section>
       <div className="dashboard-grid">
         <Section title={labels[0]} aside={<Badge>直近12週間</Badge>}>
           <div className="chart-stat">
@@ -849,6 +883,7 @@ function Page({ site, page, notify }) {
   if (page.type === "dashboard") return <Dashboard site={site} page={page} />;
   const props = { page, site, storageKey: key, notify };
   const Components = {
+    ...advancedComponents,
     catalog: Catalog,
     stories: Stories,
     people: People,
@@ -890,6 +925,7 @@ function Page({ site, page, notify }) {
           <strong>このページで試す</strong>
           {
             {
+              ...advancedUsage,
               catalog: "カードを開き、内容を確認して保存。",
               stories: "事例を開き、再現するときの条件を確認。",
               people: "担当者の専門を確認し、相談メモを保存。",
@@ -924,6 +960,13 @@ function Page({ site, page, notify }) {
         </span>
       </div>
       <Component {...props} />
+      {page.advanced && page.note && !advancedComponents[page.type] && (
+        <div className="notice">
+          <Info size={18} />
+          <span>{page.note}</span>
+        </div>
+      )}
+      {page.advanced && <ResearchNote page={page} site={site} />}
     </>
   );
 }
@@ -1095,13 +1138,19 @@ function Stories({ page, storageKey, notify }) {
       {item && (
         <Modal title={item[0]} onClose={() => setItem(null)}>
           <div className="result-callout">{item[2]}</div>
-          <h3>現場で実施したこと</h3>
+          <h3>{page.storyHeading || "現場で実施したこと"}</h3>
           <p>{item[3]}</p>
           <h3>別のチームで試すなら</h3>
           <ol className="readable-list">
-            <li>対象の作業と測定する指標を揃える。</li>
-            <li>通常時だけでなく、例外条件を含めて小さく試す。</li>
-            <li>改善前後の時間・品質を同じ条件で比較する。</li>
+            {(
+              page.guides?.[page.items.indexOf(item)] || [
+                "対象の作業と測定する指標を揃える。",
+                "例外条件を含めて小さく試す。",
+                "改善前後の時間・品質を同じ条件で比較する。",
+              ]
+            ).map((guide) => (
+              <li key={guide}>{guide}</li>
+            ))}
           </ol>
           <p className="muted">{item[1]} · 架空の事例</p>
           <button
@@ -1750,14 +1799,18 @@ function DataTable({ page }) {
     </Section>
   );
 }
-function Table({ headers, rows }) {
+function Table({ headers, rows, highlight = -1 }) {
   return (
     <div className="table-scroll">
       <table>
         <thead>
           <tr>
-            {headers.map((h) => (
-              <th key={h} scope="col">
+            {headers.map((h, i) => (
+              <th
+                key={h}
+                scope="col"
+                className={i === highlight ? "column-selected" : ""}
+              >
                 {h}
               </th>
             ))}
@@ -1772,7 +1825,12 @@ function Table({ headers, rows }) {
                     {c}
                   </th>
                 ) : (
-                  <td key={j}>{c}</td>
+                  <td
+                    key={j}
+                    className={j === highlight ? "column-selected" : ""}
+                  >
+                    {c}
+                  </td>
                 ),
               )}
             </tr>
@@ -1849,7 +1907,11 @@ function Compare({ page, storageKey }) {
         ))}
       </div>
       <Section title="同じ条件で比較">
-        <Table headers={page.headers} rows={page.rows} />
+        <Table
+          headers={page.headers}
+          rows={page.rows}
+          highlight={chosen ? page.columns.indexOf(chosen) + 1 : -1}
+        />
         <div className="notice">
           <Info size={20} />
           <span>
@@ -1931,13 +1993,17 @@ function Matrix({ page, storageKey }) {
   );
 }
 function Form({ page, site, storageKey, notify }) {
-  let initial = page.fields.map((r) => r[1]);
-  if (site.id === "egc" && page.id === "intake") {
+  const initial = page.fields.map((r) => r[1]);
+  const [pending, setPending] = useState(() => {
+    if (site.id !== "egc" || page.id !== "intake") return null;
     try {
-      const transfer = JSON.parse(localStorage.getItem("forward:transfer"));
-      if (transfer) initial = transfer;
-    } catch {}
-  }
+      const value = JSON.parse(localStorage.getItem("forward:transfer"));
+      return Array.isArray(value) && value.length === 5 ? value : null;
+    } catch {
+      return null;
+    }
+  });
+  const [beforeImport, setBeforeImport] = useState(null);
   const [saved, setSaved] = useSaved(storageKey + ":form", null);
   const [values, setValues] = useState(saved?.values || initial);
   const [status, setStatus] = useState(saved ? "保存済み" : "編集できます");
@@ -1947,6 +2013,42 @@ function Form({ page, site, storageKey, notify }) {
         title={page.type === "handoff" ? "引き継ぐ内容" : "具体的な内容を記録"}
         aside={<Badge>{status}</Badge>}
       >
+        {pending && (
+          <div className="transfer-preview">
+            <span className="eyebrow">WORKFLOW MAPPERからの引き継ぎ</span>
+            <h3>{pending[0]}</h3>
+            <p>
+              現在の下書きは保持しています。内容を反映してから保存するまで、保存済みの記録は変わりません。
+            </p>
+            <button
+              className="button secondary"
+              onClick={() => {
+                setBeforeImport(values);
+                setValues(pending);
+                setPending(null);
+                setStatus("未保存の引き継ぎ");
+                try {
+                  localStorage.removeItem("forward:transfer");
+                } catch {}
+              }}
+            >
+              引き継ぎ内容を反映
+            </button>
+          </div>
+        )}
+        {beforeImport && (
+          <button
+            className="text-link import-undo"
+            onClick={() => {
+              setValues(beforeImport);
+              setBeforeImport(null);
+              setStatus("未保存の変更");
+            }}
+          >
+            <RotateCcw size={15} />
+            反映前の編集内容に戻す
+          </button>
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -1954,22 +2056,33 @@ function Form({ page, site, storageKey, notify }) {
               const payload = [
                 values[0],
                 "Workflow Mapperで分析済み：" + values[1],
-                values[3],
+                values[0] +
+                  "\n人に残す判断：" +
+                  values[2] +
+                  "\n実証条件：" +
+                  values[3],
                 values[1],
                 values[4],
               ];
               try {
-                localStorage.removeItem("forward:egc/intake:form");
                 localStorage.setItem(
                   "forward:transfer",
                   JSON.stringify(payload),
                 );
-              } catch {}
+              } catch {
+                notify(
+                  "引き継ぎを保存できませんでした。ブラウザの保存設定を確認してください。",
+                );
+                return;
+              }
               location.hash = href(page.target, page.targetPage);
-              notify("業務分析の内容を提案フォームへ引き継ぎました");
+              notify(
+                "引き継ぐ内容を用意しました。EGCで確認して反映してください",
+              );
               return;
             }
             setSaved({ values, date: new Date().toLocaleString("ja-JP") });
+            setBeforeImport(null);
             setStatus("保存済み");
             notify("入力内容をこのブラウザに保存しました");
           }}
@@ -2488,10 +2601,24 @@ function Timeline({ page, storageKey }) {
   );
 }
 function Review({ page, storageKey, notify }) {
-  const [checked, setChecked] = useState([]);
-  const [resolved, setResolved] = useState(false);
+  const [checked, setChecked] = useSaved(storageKey + ":checked", []);
+  const [resolved, setResolved] = useSaved(storageKey + ":resolved", false);
   const [decision, setDecision] = useSaved(storageKey, null);
-  const [reason, setReason] = useState("");
+  const [reason, setReason] = useSaved(storageKey + ":reason", "");
+  const [history, setHistory] = useSaved(storageKey + ":history", []);
+  function record(result) {
+    const entry = {
+      result,
+      reason,
+      date: new Date().toLocaleString("ja-JP"),
+      evidence: checked.map((i) => page.evidence[i]),
+      resolved,
+      issue: page.issue,
+    };
+    setDecision(entry);
+    setHistory([entry, ...history].slice(0, 20));
+    notify("判断時の根拠・理由・日時を記録しました");
+  }
   return (
     <div className="two-column">
       <Section title={page.subject}>
@@ -2547,8 +2674,7 @@ function Review({ page, storageKey, notify }) {
               !reason.trim()
             }
             onClick={() => {
-              setDecision({ result: "次の段階へ", reason });
-              notify("デモ判定を記録しました");
+              record("次の段階へ");
             }}
           >
             <Check size={17} />
@@ -2558,8 +2684,7 @@ function Review({ page, storageKey, notify }) {
             disabled={!reason.trim()}
             className="button secondary"
             onClick={() => {
-              setDecision({ result: "保留・追加確認", reason });
-              notify("保留の理由を記録しました");
+              record("保留・追加確認");
             }}
           >
             保留・追加確認
@@ -2573,7 +2698,33 @@ function Review({ page, storageKey, notify }) {
             <Badge>{decision.result}</Badge>
             <h3>保存した判定理由</h3>
             <p>{decision.reason}</p>
+            {decision.date && (
+              <p className="muted">
+                記録日時：{decision.date} / 確認した根拠：
+                {decision.evidence?.length || 0}件
+              </p>
+            )}
           </div>
+        )}
+        {history.length > 0 && (
+          <details>
+            <summary>判定の履歴（最新20件まで）</summary>
+            {history.map((entry, i) => (
+              <div className="decision-record" key={i}>
+                <Badge>{entry.result}</Badge>
+                <p>{entry.reason}</p>
+                <small>
+                  {entry.date} · 未解決事項の確認：
+                  {entry.resolved ? "済" : "未了"}
+                </small>
+                <ul>
+                  {entry.evidence.map((e) => (
+                    <li key={e}>{e}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </details>
         )}
       </Section>
     </div>

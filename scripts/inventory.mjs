@@ -2,7 +2,7 @@ import { writeFileSync } from "node:fs";
 import { sites } from "../src/data.js";
 const base = "https://shuhei030924.github.io/project_site/";
 const text =
-  "# 100ページの一覧\n\n各サイト20ページ。リンク先は公開サイトです。\n\n" +
+  "# 150ページの一覧\n\n各サイト30ページ（既存20＋追加10）。21〜30は追加調査に基づく深掘りページです。リンク先は公開サイトです。\n\n" +
   sites
     .map(
       (s) =>
