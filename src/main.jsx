@@ -54,6 +54,8 @@ import { useSaved, pageSnapshot, hasStorageError } from "./storage";
 import { advancedComponents, advancedUsage, ResearchNote } from "./advanced";
 import { frontierComponents, frontierUsage } from "./frontier";
 import { ActivityMap, activityComponents, activityUsage } from "./activity";
+import { VisualGuide, VisualGuideShelf, VisualGuideGallery } from "./visual-guides";
+import "./visual-guides.css";
 import "./activity.css";
 import "./style.css";
 import "./advanced.css";
@@ -331,6 +333,9 @@ function App() {
           })}
         </nav>
         <div className="sidebar-bottom">
+          <button onClick={() => setModal("visual-guides")}>
+            <Layers size={17} />画像で見るガイド<span>16</span>
+          </button>
           <button onClick={() => setModal("directory")}>
             <Compass size={17} />
             5つのワークスペース<span>{allPages.length}</span>
@@ -475,13 +480,13 @@ function App() {
       {modal && (
         <Modal
           title={
-            modal === "directory"
+            modal === "visual-guides" ? "画像で見る、16の業務ガイド" : modal === "directory"
               ? "5つのワークスペース"
               : "設計の参考・デモについて"
           }
           onClose={() => setModal(null)}
         >
-          {modal === "directory" ? (
+          {modal === "visual-guides" ? <VisualGuideGallery onChoose={() => setModal(null)} /> : modal === "directory" ? (
             <>
               <p>
                 人材・文化、業務理解、改善管理、外部技術、現場実装。
@@ -718,6 +723,7 @@ function Dashboard({ site, page }) {
         </section>
       </div>
       <ActivityMap site={site} />
+      <VisualGuideShelf site={site} />
       <div className="metrics">
         {site.metrics.map(([label, value, unit, note], i) => (
           <section className="metric" key={label}>
@@ -1004,7 +1010,8 @@ function Page({ site, page, notify }) {
   const Component = Components[page.type];
   return (
     <>
-      <div className="usage">
+      <VisualGuide site={site} page={page} />
+      <div className="usage" id="page-workbench" tabIndex={-1}>
         <span className="usage-icon">
           <Compass size={18} />
         </span>

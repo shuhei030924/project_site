@@ -1,5 +1,7 @@
 import { sites, allPages } from "../src/data.js";
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { visualGuides, guideAssets, guideKinds } from "../src/visual-guides-data.js";
 import { research } from "../src/research.js";
 import { extraPages } from "../src/advanced-data.js";
 import { frontierPages } from "../src/frontier-data.js";
@@ -28,6 +30,17 @@ import {
 } from "../src/models.js";
 assert.equal(sites.length, 5);
 assert.equal(allPages.length, 200);
+const guideRoutes = new Set();
+for (const guide of visualGuides) {
+  const route = `${guide.site}/${guide.page}`;
+  assert(!guideRoutes.has(route), `Duplicate visual guide: ${route}`);
+  guideRoutes.add(route);
+  assert(sites.find(s => s.id === guide.site)?.pages.some(p => p.id === guide.page), `Visual guide route: ${route}`);
+  assert(sites.find(s => s.id === guide.next.site)?.pages.some(p => p.id === guide.next.page), `Visual guide next link: ${route}`);
+  assert(guideKinds[guide.kind] && guideAssets[guide.image]?.alt, `Visual guide metadata: ${route}`);
+  assert(existsSync(new URL(`../public/images/guides/${guide.image}.png`, import.meta.url)), `Missing image: ${guide.image}`);
+  if (guide.kind === "hotspots") assert(guide.points.every(p => p.x > 0 && p.x < 100 && p.y > 0 && p.y < 100), `Hotspot positions: ${route}`);
+}
 const frontierTypes =
   "chain journey ladder tree spaced pairing claims editdiff pathbuilder calibration andon zone canary hierarchy replay waterfall queue heatmap envelope yamazumi premortem quadrant triangulate concentration split bipartite brieflint samplesize pricing milestonepay sipoc spaghetti heijunka busfactor daylog fieldaudit approvals conformance blueprint terms kano flowlaw pokayoke catchball cd3 changeload dedupe alignment issuetree sla".split(
     " ",

@@ -4,6 +4,20 @@ GAIN、Robot、Supplier Engagement、Workflow Mapper、EGC の5サイト、**各
 
 **公開サイト:** https://shuhei030924.github.io/project_site/
 
+## 画像で理解する業務ガイド
+
+**9点の画像を新規生成し、既存16ページへ5種類のビジュアルガイドを追加**しました。前回の工場マップと合わせて生成画像は10点です。画像付きガイドの入口を5つのホームにも配置しています。
+
+左メニュー「画像で見るガイド」では活動・見せ方からページを選べます。画像の拡大、注目点の番号選択、改善前後の比較、手順の切り替え、操作エリアへの移動に対応しています。
+
+- [FOUP置き場の改善前後](https://shuhei030924.github.io/project_site/#/egc/mistake-proofing)
+- [熟練者が見ている証拠](https://shuhei030924.github.io/project_site/#/workflow/observations)
+- [PoCから標準化・展開まで](https://shuhei030924.github.io/project_site/#/supplier/poc)
+- [教え合いの場面と問い](https://shuhei030924.github.io/project_site/#/gain/peer-pairing)
+- [協働ロボットの対象作業](https://shuhei030924.github.io/project_site/#/robot/readiness)
+
+[16ページの提案・設計意図](docs/visual-guide-proposal.md) と [画像・生成プロンプト一覧](docs/visual-guide-image-prompts.md) を保存しました。画像と発言例は架空の説明用で、実績・実在の人物や設備を示しません。既存の演習・入力・保存機能を残しています。
+
 ## 2026年9月17日の活動説明を反映
 
 [ユーザー提供の説明全文](docs/activity-brief-2026-09-17.md) を最新の基準資料として保存しました。5つのホームに活動の関係と成果物を明示し、以下の5ページを活動目的に合わせて差し替えています。既存のURLを維持し、合計200ページです。
